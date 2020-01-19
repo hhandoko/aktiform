@@ -1,0 +1,109 @@
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
+plugins {
+    id 'com.adarshr.test-logger'
+    id "com.diffplug.gradle.spotless"
+    id 'com.github.ben-manes.versions'
+    id 'io.spring.dependency-management'
+    id 'org.springframework.boot'
+
+    id 'java'
+    id 'scala'
+}
+
+apply from: "${project.rootDir}/gradle/ext/javacOptions.gradle"
+apply from: "${project.rootDir}/gradle/ext/scalacOptions.gradle"
+apply from: "${project.rootDir}/utils.gradle"
+
+def appVersion = rootProject.file('VERSION.txt').text.trim()
+def timestampFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+group = 'com.hhandoko'
+version = appVersion
+sourceCompatibility = JavaVersion.VERSION_11
+
+processResources {
+    filesMatching("**/application.properties") {
+        // Replace ${APP_VERSION} with hardcoded application version string}
+        filter { line ->
+            line.contains('${APP_VERSION}') ? line.replace('${APP_VERSION}', appVersion) : line
+        }
+
+        // Replace ${BUILD_TIMESTAMP} with hardcoded current timestamp
+        filter { line ->
+            line.contains('${BUILD_TIMESTAMP}') ? line.replace('${BUILD_TIMESTAMP}', ZonedDateTime.now().format(timestampFormatter)) : line
+        }
+
+        // Replace ${COMMIT_HASH} with latest git commit hash
+        filter { line ->
+            line.contains('${COMMIT_HASH}') ? line.replace('${COMMIT_HASH}', gitShortHash()) : line
+        }
+    }
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.projectlombok:lombok'
+
+    implementation "org.graalvm.sdk:graal-sdk:${graalSdkVersion}"
+    implementation "org.scala-lang:scala-library:${scalaVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-mustache'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation scala("org.scalatest:scalatest:${scalatestVersion}")
+}
+
+configurations.all {
+    resolutionStrategy {
+        failOnVersionConflict()
+        preferProjectModules()
+    }
+}
+
+bootRun {
+    // Pass active profile configuration for better development experience
+    def profile = 'local'
+    environment 'BOOT_ENV', profile
+    systemProperty 'spring.profiles.active', profile
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        importOrder 'java', 'javax', '', '\\#', 'com.hhandoko', '\\#com.hhandoko'
+    }
+    scala {
+        scalafmt()
+    }
+}
+
+test {
+}
+
+testlogger {
+    theme 'mocha'
+    slowThreshold 2000 // ms
+}

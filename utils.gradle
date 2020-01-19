@@ -1,0 +1,29 @@
+ext {
+    /**
+     * Outputs the latest commit's git shorthash. Requires `git` to be present as it executes `git` command and
+     * capture its output.
+     *
+     * @return Latest commit git shorthash.
+     */
+    gitShortHash = { ->
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+
+        stdout.toString().trim()
+    }
+
+    /**
+     * Wraps over Scala libraries to append correct Scala version (i.e. with _2.13 suffix)
+     *
+     * @param dependency Dependency declaration.
+     * @returns Dependency declaration for the correct Scala version.
+     */
+    scala = { String dependency ->
+        def (groupId, artifactId, version) = dependency.tokenize(':')
+
+        "${groupId}:${artifactId}_${scalaLibVersion}:${version}"
+    }
+}
