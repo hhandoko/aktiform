@@ -14,7 +14,12 @@ class HomeController @Autowired()(
   @GetMapping(value = Array("/"))
   def index(): ModelAndView = {
     import scala.jdk.CollectionConverters._
-    val model = Map("resources.bootstrapPath" -> resourcesConfig.bootstrapPath)
+    val model = Map(
+      "resources.bootstrapStylePath" -> resourcesConfig.bootstrapStylePath,
+      "resources.bootstrapScriptPath" -> resourcesConfig.bootstrapScriptPath,
+      "resources.jqueryScriptPath" -> resourcesConfig.jqueryScriptPath,
+      "resources.popperScriptPath" -> resourcesConfig.popperScriptPath
+    )
     new ModelAndView("home", model.asJava)
   }
 }

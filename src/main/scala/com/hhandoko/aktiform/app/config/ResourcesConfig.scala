@@ -13,8 +13,11 @@ import org.springframework.context.annotation.{Configuration, PropertySource}
   ignoreResourceNotFound = true
 )
 class ResourcesConfig(
-    @BeanProperty var bootstrapPath: String
+    @BeanProperty var bootstrapStylePath: String,
+    @BeanProperty var bootstrapScriptPath: String,
+    @BeanProperty var jqueryScriptPath: String,
+    @BeanProperty var popperScriptPath: String
 ) {
   // Workaround for no-args constructor
-  def this() = this("")
+  def this() = this("", "", "", "")
 }
