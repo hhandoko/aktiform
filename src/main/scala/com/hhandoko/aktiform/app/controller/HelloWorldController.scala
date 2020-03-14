@@ -1,4 +1,4 @@
-package com.hhandoko.aktiform.controller
+package com.hhandoko.aktiform.app.controller
 
 import java.util.{Map => JMap}
 

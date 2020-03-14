@@ -1,4 +1,4 @@
-package com.hhandoko.aktiform.module
+package com.hhandoko.aktiform.app.module
 
 import org.graalvm.polyglot.Context
 import org.springframework.context.annotation.{Bean, Configuration}

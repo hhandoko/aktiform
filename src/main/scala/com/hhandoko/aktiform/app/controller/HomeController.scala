@@ -1,4 +1,4 @@
-package com.hhandoko.aktiform.controller
+package com.hhandoko.aktiform.app.controller
 
 import org.springframework.web.bind.annotation.{GetMapping, RestController}
 import org.springframework.web.servlet.ModelAndView

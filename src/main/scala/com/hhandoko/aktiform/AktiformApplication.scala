@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Import
 
-import com.hhandoko.aktiform.module.PolyglotContextModule
+import com.hhandoko.aktiform.app.module.PolyglotContextModule
 
 @Import(
   value = Array(
