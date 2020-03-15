@@ -24,6 +24,7 @@ version = appVersion
 sourceCompatibility = JavaVersion.VERSION_11
 
 processResources {
+    // Similar to property expansion, to hardcode application info at compile-time
     filesMatching("**/application.properties") {
         // Replace ${APP_VERSION} with hardcoded application version string}
         filter { line ->
@@ -77,6 +78,7 @@ dependencies {
 }
 
 configurations.all {
+    // Ensure that version conflict in dependencies throws error at compile-time rather that fail at runtime
     resolutionStrategy {
         failOnVersionConflict()
         preferProjectModules()
@@ -84,17 +86,27 @@ configurations.all {
 }
 
 bootRun {
-    // Pass active profile configuration for better development experience
+    // Pass `local` as active profile configuration in `bootRun` for better development experience
     def profile = 'local'
     environment 'BOOT_ENV', profile
     systemProperty 'spring.profiles.active', profile
 }
 
+// Code formatter Gradle plugin
+// See: https://github.com/diffplug/spotless
+//      https://github.com/diffplug/spotless/tree/master/plugin-gradle
 spotless {
+    // Use Google Java's styleguide
+    // See: https://google.github.io/styleguide/javaguide.html
     java {
         googleJavaFormat()
-        importOrder 'java', 'javax', '', '\\#', 'com.hhandoko', '\\#com.hhandoko'
+        importOrder 'java', 'javax', 'scala', '', '\\#', 'com.hhandoko', '\\#com.hhandoko'
     }
+
+    // Use customer scalafmt rule as defined in `scalafmt.conf`
+    // scalafmt does not support import orders (yet), so import configuration needs to be setup by each developer
+    // following the rules above (as per Java rules).
+    // See: https://scalameta.org/scalafmt/
     scala {
         scalafmt()
     }
@@ -103,6 +115,8 @@ spotless {
 test {
 }
 
+// Pretty-print test output Gradle plugin, supports parallel test execution
+// See: https://github.com/radarsh/gradle-test-logger-plugin
 testlogger {
     theme 'mocha'
     slowThreshold 2000 // ms
