@@ -1,4 +1,4 @@
-package com.hhandoko.aktiform
+package com.hhandoko.aktiform.app.runner
 
 import org.junit.runner.RunWith
 import org.scalatest.{MustMatchers, WordSpec}
