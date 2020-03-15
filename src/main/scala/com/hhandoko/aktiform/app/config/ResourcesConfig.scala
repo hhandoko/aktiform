@@ -12,7 +12,7 @@ import org.springframework.context.annotation.{Configuration, PropertySource}
   value = Array("classpath:/resources-${BOOT_ENV}.properties"),
   ignoreResourceNotFound = true
 )
-class ResourcesConfig(
+case class ResourcesConfig(
     @BeanProperty var bootstrapStylePath: String,
     @BeanProperty var bootstrapScriptPath: String,
     @BeanProperty var jqueryScriptPath: String,
