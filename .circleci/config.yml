@@ -17,7 +17,7 @@ jobs:
       # git version provided is
       - run:
           name: Configure image
-          command: yum -f install git
+          command: yum -y install git
 
       # Download dependencies and cache for future jobs
       - restore_cache:
