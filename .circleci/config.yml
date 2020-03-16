@@ -1,0 +1,46 @@
+# CircleCI configuration with Gradle in Docker container
+# See: https://circleci.com/docs/2.0/language-java/#sample-configuration
+version: 2
+jobs:
+  build:
+    docker:
+      - image: oracle/graalvm-ce:20.0.0-java11
+
+    environment:
+      # Max heap and terminal mode as per CircleCI's defaults
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      # Download dependencies and cache for future jobs
+      - restore_cache:
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
+      - run:
+          name: Download dependencies
+          command: ./gradlew dependencies
+      - save_cache:
+          paths:
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
+
+      # Compile and test
+      - run:
+          name: Compile project
+          command: ./gradlew classes testClasses
+      - run:
+          name: Run tests
+          command: ./gradlew test
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build

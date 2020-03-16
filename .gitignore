@@ -43,4 +43,5 @@ gradle-app.setting
 **/build/
 
 ### Others ###
+/bin/
 /logs/
