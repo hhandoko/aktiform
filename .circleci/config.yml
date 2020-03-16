@@ -13,6 +13,11 @@ jobs:
 
     steps:
       - checkout
+      # Install git as we will hardcode commit hash into the application build manifest
+      # git version provided is
+      - run:
+          name: Configure image
+          command: yum -f install git
 
       # Download dependencies and cache for future jobs
       - restore_cache:
