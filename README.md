@@ -1,4 +1,5 @@
-[![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen.svg)](LICENSE)
+[![CircleCI](https://circleci.com/gh/hhandoko/aktiform.svg?style=shield)](https://circleci.com/gh/hhandoko/aktiform)
+[![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen.svg?style=flat-square)](LICENSE)
 
 # aktiform
 
