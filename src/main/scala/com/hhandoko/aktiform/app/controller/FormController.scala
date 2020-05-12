@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.{
 
 import com.hhandoko.aktiform.api.html.Page
 import com.hhandoko.aktiform.api.html.input.{Form, InputTextField}
+import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
 
 @RestController
 class FormController @Autowired()(
@@ -27,7 +28,7 @@ class FormController @Autowired()(
     val form =
       Form(s"/forms/${id}", Seq(InputTextField("name", "name", "Name")))
     val page = Page(Seq(form))
-    page.render(id)
+    HtmlBootstrapRender.render(page)
   }
 
   @PostMapping(value = Array("/forms/{id}"))
@@ -39,5 +40,4 @@ class FormController @Autowired()(
     import scala.jdk.CollectionConverters._
     data.asScala.map { case (key, value) => s"$key -> $value" }.mkString("<br>")
   }
-
 }
