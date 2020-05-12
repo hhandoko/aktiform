@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.{
 
 import com.hhandoko.aktiform.api.html.Page
 import com.hhandoko.aktiform.api.html.input.{Form, InputTextField}
+import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
 
 @RestController
 class FormController @Autowired()(
-    ) {
+    resourcesConfig: ResourcesConfig
+) {
+
+  private final val renderer = new HtmlBootstrapRender(resourcesConfig)
 
   @GetMapping(value = Array("/forms/{id}"))
   @ResponseBody
@@ -28,7 +32,7 @@ class FormController @Autowired()(
     val form =
       Form(s"/forms/${id}", Seq(InputTextField("name", "name", "Name")))
     val page = Page(Seq(form))
-    HtmlBootstrapRender.render(page)
+    renderer.render(page)
   }
 
   @PostMapping(value = Array("/forms/{id}"))

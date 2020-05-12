@@ -21,10 +21,8 @@ class HelloWorldController @Autowired()(
   ): ModelAndView = {
     import scala.jdk.CollectionConverters._
     val model = Map(
-      "resources.bootstrapStylePath" -> resourcesConfig.bootstrapStylePath,
-      "resources.bootstrapScriptPath" -> resourcesConfig.bootstrapScriptPath,
-      "resources.jqueryScriptPath" -> resourcesConfig.jqueryScriptPath,
-      "resources.popperScriptPath" -> resourcesConfig.popperScriptPath,
+      "styles" -> resourcesConfig.bootstrap.styles,
+      "scripts" -> resourcesConfig.bootstrap.scripts,
       "name" -> name
     )
     new ModelAndView("hello", model.asJava)

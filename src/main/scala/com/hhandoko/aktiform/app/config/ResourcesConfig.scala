@@ -7,16 +7,11 @@ import org.springframework.context.annotation.{Configuration, PropertySource}
 
 /** Static resources path from configuration values.
   *
-  * This config allows styles and scripts to be loaded locally for development purposes, and from CDN (default or User-
-  * provided, e.g. CloudFront) when packaged and run for production use.
+  * This config allows styles and scripts to be loaded locally for development
+  * purposes, and from CDN (default or User-provided, e.g. CloudFront) when
+  * packaged and run for production use.
   *
-  * TODO: Convert hardcoded Bootstrap styles and script path to string array configuration with the checksum, to allow
-  *       more flexible override
-  *
-  * @param bootstrapStylePath Path to Bootstrap CSS.
-  * @param bootstrapScriptPath Path to Bootstrap (plugin) script.
-  * @param jqueryScriptPath Path to jQuery script.
-  * @param popperScriptPath Path to Popper script.
+  * @param bootstrap Bootstrap style and scripts.
   */
 @Configuration
 @ConfigurationProperties(prefix = "resources")
@@ -26,11 +21,8 @@ import org.springframework.context.annotation.{Configuration, PropertySource}
   ignoreResourceNotFound = true
 )
 case class ResourcesConfig(
-    @BeanProperty var bootstrapStylePath: String,
-    @BeanProperty var bootstrapScriptPath: String,
-    @BeanProperty var jqueryScriptPath: String,
-    @BeanProperty var popperScriptPath: String
+    @BeanProperty var bootstrap: ResourcesVariantConfig
 ) {
   // Workaround for no-args constructor
-  def this() = this("", "", "", "")
+  def this() = this(new ResourcesVariantConfig())
 }

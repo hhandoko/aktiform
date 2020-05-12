@@ -15,10 +15,8 @@ class HomeController @Autowired()(
   def index(): ModelAndView = {
     import scala.jdk.CollectionConverters._
     val model = Map(
-      "resources.bootstrapStylePath" -> resourcesConfig.bootstrapStylePath,
-      "resources.bootstrapScriptPath" -> resourcesConfig.bootstrapScriptPath,
-      "resources.jqueryScriptPath" -> resourcesConfig.jqueryScriptPath,
-      "resources.popperScriptPath" -> resourcesConfig.popperScriptPath
+      "styles" -> resourcesConfig.bootstrap.styles,
+      "scripts" -> resourcesConfig.bootstrap.scripts
     )
     new ModelAndView("home", model.asJava)
   }
