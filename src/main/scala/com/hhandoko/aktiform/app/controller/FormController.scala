@@ -22,7 +22,7 @@ class FormController @Autowired()(
     resourcesConfig: ResourcesConfig
 ) {
 
-  private final val renderer = new HtmlBootstrapRender(resourcesConfig)
+  private final val renderer = new HtmlBootstrapRender(resourcesConfig.bootstrap)
 
   @GetMapping(value = Array("/forms/{id}"))
   @ResponseBody

@@ -1,62 +1,21 @@
 package com.hhandoko.aktiform.app.view.render
 
-import java.util.{HashMap => JHashMap}
-import scala.io.Source
-
-import com.samskivert.mustache.Mustache
-
 import com.hhandoko.aktiform.api.html.{Element, Page}
 import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextField}
-import com.hhandoko.aktiform.app.config.ResourcesConfig
-import com.hhandoko.aktiform.core.helper.AutoCloseableResource.using
+import com.hhandoko.aktiform.app.config.ResourcesVariantConfig
 
-class HtmlBootstrapRender(resourcesConfig: ResourcesConfig) extends HtmlRender {
+final class HtmlBootstrapRender(config: ResourcesVariantConfig) extends HtmlRender {
 
-  private final val PAGE_TEMPLATE = "templates/dynamic.mustache"
-  private final val META_TEMPLATE = "templates/section/meta.mustache"
-  private final val SCRIPTS_TEMPLATE = "templates/section/scripts.mustache"
-  private final val STYLES_TEMPLATE = "templates/section/styles.mustache"
-
-  private final val pageTemplateRaw =
-    using(Source.fromResource(PAGE_TEMPLATE))(_.mkString)
-  private final val pageTemplate =
-    Mustache.compiler().escapeHTML(false).compile(pageTemplateRaw)
-  private final val metaTemplateRaw =
-    using(Source.fromResource(META_TEMPLATE))(_.mkString)
-  private final val metaTemplate =
-    Mustache.compiler().compile(metaTemplateRaw)
-  private final val scriptsTemplateRaw =
-    using(Source.fromResource(SCRIPTS_TEMPLATE))(_.mkString)
-  private final val scriptsTemplate =
-    Mustache.compiler().compile(scriptsTemplateRaw)
-  private final val stylesTemplateRaw =
-    using(Source.fromResource(STYLES_TEMPLATE))(_.mkString)
-  private final val stylesTemplate =
-    Mustache.compiler().compile(stylesTemplateRaw)
+  private final val pageRender = new DynamicPageRender(config, render)
 
   def render(page: Page): String =
-    pageTemplate.execute {
-      new JHashMap[String, String] {
-        this.put("meta", metaTemplate.execute(new JHashMap()))
-        this.put("styles", stylesTemplate.execute(new JHashMap[String, AnyRef] {
-          this.put("styles", resourcesConfig.bootstrap.styles)
-        }))
-        this.put("content", page.els.map(render).mkString)
-        this.put(
-          "scripts",
-          scriptsTemplate.execute(new JHashMap[String, AnyRef] {
-            this.put("scripts", resourcesConfig.bootstrap.scripts)
-            this.put("resources", resourcesConfig)
-          })
-        )
-      }
-    }
+    pageRender.render(page)
 
-  def render(el: Element): String = el match {
+  private[this] def render(el: Element): String = el match {
     case f: Form => render(f)
   }
 
-  def render(field: FormField): String = field match {
+  private[this] def render(field: FormField): String = field match {
     case t: InputTextField => render(t)
   }
 
