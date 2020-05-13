@@ -4,7 +4,8 @@ import com.hhandoko.aktiform.api.html.{Element, Page}
 import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextField}
 import com.hhandoko.aktiform.app.config.ResourcesVariantConfig
 
-final class HtmlBootstrapRender(config: ResourcesVariantConfig) extends HtmlRender {
+final class HtmlBootstrapRender(config: ResourcesVariantConfig)
+    extends HtmlRender {
 
   private final val pageRender = new DynamicPageRender(config, render)
 
