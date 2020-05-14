@@ -17,7 +17,7 @@ final class HtmlBootstrapRender(config: ResourcesVariantConfig)
   }
 
   private[this] def render(field: FormField): String = field match {
-    case t: InputTextField => render(t)
+    case t: InputTextField => bootstrap.InputTextComponent.render(t)
   }
 
   private[this] def render(form: Form): String =
@@ -25,13 +25,5 @@ final class HtmlBootstrapRender(config: ResourcesVariantConfig)
        |${form.fields.map(render).mkString}
        |<button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
        |</form>
-       |""".stripMargin
-
-  private[this] def render(field: InputTextField): String =
-    s"""<label for="${field.id}">${field.label}</label>
-       |<input id="${field.id}"
-       |       name="${field.name}"
-       |       class="form-control"
-       |       type="text">
        |""".stripMargin
 }
