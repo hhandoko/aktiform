@@ -3,9 +3,9 @@ package com.hhandoko.aktiform.app.view.render.bootstrap
 import java.util.{List => JList}
 
 import com.hhandoko.aktiform.api.html.input.{FormFieldError, InputTextField}
-import com.hhandoko.aktiform.app.view.render.Component
+import com.hhandoko.aktiform.app.view.render.InputComponent
 
-object InputTextComponent extends Component {
+object InputTextComponent extends InputComponent {
 
   val templatePath = "templates/bootstrap/input-text.mustache"
 

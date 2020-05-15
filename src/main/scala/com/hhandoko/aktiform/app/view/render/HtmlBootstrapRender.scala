@@ -1,9 +1,13 @@
 package com.hhandoko.aktiform.app.view.render
 
+import com.hhandoko.aktiform.api.html.input.Form
 import com.hhandoko.aktiform.api.html.{Element, Page}
-import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextField}
 import com.hhandoko.aktiform.app.config.ResourcesVariantConfig
 
+/** HTML renderer using Bootstrap (v4.x) styles.
+  *
+  * @param config Bootstrap resources loaded via config.
+  */
 final class HtmlBootstrapRender(config: ResourcesVariantConfig)
     extends HtmlRender {
 
@@ -13,17 +17,6 @@ final class HtmlBootstrapRender(config: ResourcesVariantConfig)
     pageRender.render(page)
 
   private[this] def render(el: Element): String = el match {
-    case f: Form => render(f)
+    case f: Form => bootstrap.FormComponent.render(f)
   }
-
-  private[this] def render(field: FormField): String = field match {
-    case t: InputTextField => bootstrap.InputTextComponent.render(t)
-  }
-
-  private[this] def render(form: Form): String =
-    s"""<form class="needs-validation" action="${form.target}" method="post" novalidate>
-       |${form.fields.map(render).mkString}
-       |<button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
-       |</form>
-       |""".stripMargin
 }
