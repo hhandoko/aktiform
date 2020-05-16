@@ -1,3 +1,3 @@
 package com.hhandoko.aktiform.api.html
 
-final case class Page(els: Seq[Element])
+final case class Page(content: Seq[Element])

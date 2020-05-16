@@ -3,16 +3,9 @@ package com.hhandoko.aktiform.app.controller
 import java.util.{Map => JMap}
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.{
-  GetMapping,
-  PathVariable,
-  PostMapping,
-  RequestParam,
-  ResponseBody,
-  RestController
-}
+import org.springframework.web.bind.annotation.{GetMapping, PathVariable, PostMapping, RequestParam, ResponseBody, RestController}
 
-import com.hhandoko.aktiform.api.html.Page
+import com.hhandoko.aktiform.api.html.{Page, Section}
 import com.hhandoko.aktiform.api.html.input.{Form, InputTextField}
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
@@ -31,9 +24,11 @@ class FormController @Autowired()(
   def showForm(
       @PathVariable id: String
   ): String = {
-    val form =
-      Form(s"/forms/${id}", Seq(InputTextField("name", "name", "Name")))
-    val page = Page(Seq(form))
+    val fields = Seq(InputTextField("name", "name", "Name"))
+    val form = Form(s"/forms/${id}", fields)
+    val section = Section(Seq(form))
+    val page = Page(Seq(section))
+
     renderer.render(page)
   }
 

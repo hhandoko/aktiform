@@ -71,6 +71,6 @@ final class DynamicPageRender(
 
   def render(page: Page): String =
     template.execute(
-      Collections.singletonMap("content", page.els.map(elRender).mkString)
+      Collections.singletonMap("content", page.content.map(elRender).mkString)
     )
 }
