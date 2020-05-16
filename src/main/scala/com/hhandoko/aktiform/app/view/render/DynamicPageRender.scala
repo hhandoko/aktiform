@@ -8,16 +8,16 @@ import com.samskivert.mustache.Mustache.TemplateLoader
 import com.typesafe.scalalogging.LazyLogging
 
 import com.hhandoko.aktiform.api.html.{Element, Page}
-import com.hhandoko.aktiform.app.config.ResourcesVariantConfig
+import com.hhandoko.aktiform.app.config.resource.ResourceVariant
 import com.hhandoko.aktiform.core.helper.AutoCloseableResource.using
 
 /** Page renderer using dynamic master template.
   *
-  * @param config CSS variant resources configuration.
+  * @param variant CSS variant resources configuration.
   * @param elRender Element renderer.
   */
 final class DynamicPageRender(
-    config: ResourcesVariantConfig,
+    variant: ResourceVariant,
     elRender: Element => String
 ) extends LazyLogging {
 
@@ -41,8 +41,8 @@ final class DynamicPageRender(
     val context =
       new JHashMap[String, AnyRef] {
         this.put("meta", Collections.EMPTY_MAP)
-        this.put("styles", config.styles)
-        this.put("scripts", config.scripts)
+        this.put("styles", variant.styles)
+        this.put("scripts", variant.scripts)
 
         // Rewrap `content` segment to be executed later.
         //

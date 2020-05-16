@@ -2,14 +2,14 @@ package com.hhandoko.aktiform.app.view.render
 
 import com.hhandoko.aktiform.api.html.input.Form
 import com.hhandoko.aktiform.api.html.{Element, Page, Section}
-import com.hhandoko.aktiform.app.config.ResourcesVariantConfig
+import com.hhandoko.aktiform.app.config.resource.ResourceVariant
 import com.hhandoko.aktiform.app.view.render.bootstrap.{FormComponent, SectionComponent}
 
 /** HTML renderer using Bootstrap (v4.x) styles.
   *
   * @param config Bootstrap resources loaded via config.
   */
-final class HtmlBootstrapRender(config: ResourcesVariantConfig) extends HtmlRender {
+final class HtmlBootstrapRender(config: ResourceVariant) extends HtmlRender {
 
   private final val pageRender    = new DynamicPageRender(config, render)
   private final val sectionRender = new SectionComponent(render)

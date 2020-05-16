@@ -5,6 +5,8 @@ import scala.beans.BeanProperty
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.{Configuration, PropertySource}
 
+import com.hhandoko.aktiform.app.config.resource.ResourceVariant
+
 /** Static resources path from configuration values.
   *
   * This config allows styles and scripts to be loaded locally for development
@@ -21,8 +23,8 @@ import org.springframework.context.annotation.{Configuration, PropertySource}
   ignoreResourceNotFound = true
 )
 case class ResourcesConfig(
-    @BeanProperty var bootstrap: ResourcesVariantConfig
+    @BeanProperty var bootstrap: ResourceVariant
 ) {
   // Workaround for no-args constructor
-  def this() = this(new ResourcesVariantConfig())
+  def this() = this(null)
 }
