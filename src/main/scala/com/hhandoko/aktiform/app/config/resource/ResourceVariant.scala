@@ -11,7 +11,7 @@ import scala.beans.BeanProperty
   * @param styles Paths to CSS.
   * @param scripts Paths to scripts.
   */
-case class ResourceVariant(
+final case class ResourceVariant(
     @BeanProperty var styles: JList[Resource],
     @BeanProperty var scripts: JList[Resource]
 ) {

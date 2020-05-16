@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 
 @RestController
-class HomeController @Autowired() (
+final class HomeController @Autowired() (
     resourcesConfig: ResourcesConfig
 ) {
 

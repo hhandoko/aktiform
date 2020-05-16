@@ -7,7 +7,7 @@ import scala.beans.BeanProperty
   * @param path Path to the resource (local or remote).
   * @param hash Checksum signature of the resource.
   */
-case class Resource(
+final case class Resource(
     @BeanProperty var path: String,
     @BeanProperty var hash: String
 ) {
