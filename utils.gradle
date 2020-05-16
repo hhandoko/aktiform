@@ -21,7 +21,7 @@ ext {
      * @param dependency Dependency declaration.
      * @returns Dependency declaration for the correct Scala version.
      */
-    scala = { GString dependency ->
+    scala = { String dependency ->
         def (groupId, artifactId, version) = dependency.tokenize(':')
 
         "${groupId}:${artifactId}_${scalaLibVersion}:${version}"
