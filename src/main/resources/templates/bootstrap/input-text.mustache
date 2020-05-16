@@ -1,0 +1,28 @@
+<div class="col">
+    <label for="{{id}}">{{label}}</label>
+    <input id="{{id}}"
+           name="{{name}}"
+           class="form-control"
+           type="text"
+           {{#value}}value="{{.}}"{{/value}}
+        {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
+        {{#required}}required{{/required}}>
+
+    {{#has_single_error}}
+        <div class="invalid-feedback">
+            {{#errors.0}}
+                {{message}}
+            {{/errors.0}}
+        </div>
+    {{/has_single_error}}
+
+    {{#has_multiple_errors}}
+        <div class="invalid-feedback">
+            <ul>
+                {{#errors}}
+                    <li>{{message}}</li>
+                {{/errors}}
+            </ul>
+        </div>
+    {{/has_multiple_errors}}
+</div>

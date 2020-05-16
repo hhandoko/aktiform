@@ -72,8 +72,10 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    implementation scala("com.typesafe.scala-logging:scala-logging:${scalaLoggingVersion}")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation scala("net.ruippeixotog:scala-scraper:${scalaScraperVersion}")
     testImplementation scala("org.scalatest:scalatest:${scalatestVersion}")
 }
 
