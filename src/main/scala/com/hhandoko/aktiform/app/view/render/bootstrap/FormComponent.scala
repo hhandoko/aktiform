@@ -22,7 +22,8 @@ object FormComponent extends RenderComponent {
       )
   }
 
-  private[this] def render(field: FormField): String = field match {
-    case t: InputTextField => InputTextComponent.render(t)
-  }
+  private[this] def render(field: FormField): String =
+    field match {
+      case t: InputTextField => InputTextComponent.render(t)
+    }
 }

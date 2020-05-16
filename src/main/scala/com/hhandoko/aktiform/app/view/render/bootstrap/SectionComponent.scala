@@ -11,6 +11,7 @@ final class SectionComponent(elRender: Element => String) extends RenderComponen
 
   def render(section: Section): String =
     template.execute(
-      Collections.singletonMap("content", section.content.map(elRender).mkString)
+      Collections
+        .singletonMap("content", section.content.map(elRender).mkString)
     )
 }

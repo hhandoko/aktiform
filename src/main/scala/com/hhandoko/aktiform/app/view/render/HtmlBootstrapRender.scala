@@ -9,18 +9,18 @@ import com.hhandoko.aktiform.app.view.render.bootstrap.{FormComponent, SectionCo
   *
   * @param config Bootstrap resources loaded via config.
   */
-final class HtmlBootstrapRender(config: ResourcesVariantConfig)
-    extends HtmlRender {
+final class HtmlBootstrapRender(config: ResourcesVariantConfig) extends HtmlRender {
 
-  private final val pageRender = new DynamicPageRender(config, render)
+  private final val pageRender    = new DynamicPageRender(config, render)
   private final val sectionRender = new SectionComponent(render)
-  private final val formRender = FormComponent
+  private final val formRender    = FormComponent
 
   def render(page: Page): String =
     pageRender.render(page)
 
-  private[this] def render(el: Element): String = el match {
-    case s: Section => sectionRender.render(s)
-    case f: Form => formRender.render(f)
-  }
+  private[this] def render(el: Element): String =
+    el match {
+      case s: Section => sectionRender.render(s)
+      case f: Form    => formRender.render(f)
+    }
 }
