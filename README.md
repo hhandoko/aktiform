@@ -32,7 +32,7 @@ Now you can visit it on [`localhost:8080`](http://localhost:8080) from your brow
 ## Code Formatting
 
 We follow [Google Java styleguide] for Java code formatting and style, and custom ScalaFmt rule for Scala as found in
-`scalafmt.conf`.
+`.scalafmt.conf`.
 
   - Import the relevant configuration to your favourite IDE to auto-apply formatting during development time, or
   - Run `spotlessCheck` and `spotlessApply` prior to committing your code to apply auto-formatting

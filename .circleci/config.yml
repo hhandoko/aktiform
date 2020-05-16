@@ -13,8 +13,8 @@ jobs:
 
     steps:
       - checkout
-      # Install git as we will hardcode commit hash into the application build manifest
-      # git version provided is
+      # Install git as we will hardcode commit hash into the application build
+      # manifest.
       - run:
           name: Configure image
           command: yum -y install git
@@ -35,6 +35,11 @@ jobs:
           paths:
             - ~/.gradle/caches
           key: v1-gradle-cache-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
+
+      # Check syntax and formatting
+      - run:
+          name: Check syntax
+          command: ./gradlew spotlessCheck
 
       # Compile and test
       - run:
