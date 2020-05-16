@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 
 @RestController
-class HomeController @Autowired()(
+class HomeController @Autowired() (
     resourcesConfig: ResourcesConfig
 ) {
 
@@ -15,7 +15,7 @@ class HomeController @Autowired()(
   def index(): ModelAndView = {
     import scala.jdk.CollectionConverters._
     val model = Map(
-      "styles" -> resourcesConfig.bootstrap.styles,
+      "styles"  -> resourcesConfig.bootstrap.styles,
       "scripts" -> resourcesConfig.bootstrap.scripts
     )
     new ModelAndView("home", model.asJava)

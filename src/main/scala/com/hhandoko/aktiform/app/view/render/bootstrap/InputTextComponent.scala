@@ -21,7 +21,7 @@ object InputTextComponent extends InputComponent {
       value: String,
       placeholder: String
   ) {
-    val has_single_error: Boolean = errors.size() == 1
+    val has_single_error: Boolean    = errors.size() == 1
     val has_multiple_errors: Boolean = errors.size() > 1
   }
   private[this] final object InputTextFieldModel {

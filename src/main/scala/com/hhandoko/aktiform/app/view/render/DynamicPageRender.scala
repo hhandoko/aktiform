@@ -32,7 +32,7 @@ final class DynamicPageRender(
       "[init#templateBase] Loading precached raw base template for dynamic pages"
     )
 
-    val master = "templates/dynamic.mustache"
+    val master  = "templates/dynamic.mustache"
     val section = (name: String) => s"templates/${name}.mustache"
     val loader: TemplateLoader = (name: String) => {
       Source.fromResource(section(name)).reader()
@@ -70,7 +70,6 @@ final class DynamicPageRender(
   }
 
   def render(page: Page): String =
-    template.execute(
-      Collections.singletonMap("content", page.content.map(elRender).mkString)
-    )
+    template
+      .execute(Collections.singletonMap("content", page.content.map(elRender).mkString))
 }
