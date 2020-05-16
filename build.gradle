@@ -59,6 +59,7 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     compileOnly 'org.projectlombok:lombok'
+    compileOnly "org.springframework:spring-context-indexer:${springVersion}"
 
     implementation "org.graalvm.sdk:graal-sdk:${graalSdkVersion}"
     implementation "org.scala-lang:scala-library:${scalaVersion}"
@@ -106,7 +107,7 @@ spotless {
     // following the rules above (as per Java rules).
     // See: https://scalameta.org/scalafmt/
     scala {
-        scalafmt(gradleScalaFmtVersion).configFile(".scalafmt.conf")
+        scalafmt(gradleScalaFmtVersion).configFile('.scalafmt.conf')
     }
 }
 
