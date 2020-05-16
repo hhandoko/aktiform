@@ -105,12 +105,12 @@ spotless {
         importOrder 'java', 'javax', 'scala', '', '\\#', 'com.hhandoko', '\\#com.hhandoko'
     }
 
-    // Use customer scalafmt rule as defined in `scalafmt.conf`
+    // Use customer scalafmt rule as defined in `.scalafmt.conf`
     // scalafmt does not support import orders (yet), so import configuration needs to be setup by each developer
     // following the rules above (as per Java rules).
     // See: https://scalameta.org/scalafmt/
     scala {
-        scalafmt()
+        scalafmt(gradleScalaFmtVersion).configFile(".scalafmt.conf")
     }
 }
 
