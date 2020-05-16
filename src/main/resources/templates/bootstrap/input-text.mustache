@@ -2,11 +2,11 @@
     <label for="{{id}}">{{label}}</label>
     <input id="{{id}}"
            name="{{name}}"
-           class="form-control"
-           type="text"
            {{#value}}value="{{.}}"{{/value}}
-        {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
-        {{#required}}required{{/required}}>
+           {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
+           {{#required}}required{{/required}}
+           class="form-control"
+           type="text">
 
     {{#has_single_error}}
         <div class="invalid-feedback">

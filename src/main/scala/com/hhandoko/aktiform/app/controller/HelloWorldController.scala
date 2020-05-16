@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 
 @RestController
-class HelloWorldController @Autowired() (
+final class HelloWorldController @Autowired() (
     resourcesConfig: ResourcesConfig
 ) {
 
@@ -16,7 +16,7 @@ class HelloWorldController @Autowired() (
       @PathVariable name: String
   ): ModelAndView = {
     import scala.jdk.CollectionConverters._
-    val model = Map(
+    val model: Map[String, AnyRef] = Map(
       "styles"  -> resourcesConfig.bootstrap.styles,
       "scripts" -> resourcesConfig.bootstrap.scripts,
       "name"    -> name

@@ -18,7 +18,7 @@ import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
 
 @RestController
-class FormController @Autowired() (
+final class FormController @Autowired() (
     resourcesConfig: ResourcesConfig
 ) {
 
@@ -46,6 +46,11 @@ class FormController @Autowired() (
       @RequestParam data: JMap[String, String]
   ): String = {
     import scala.jdk.CollectionConverters._
-    data.asScala.map { case (key, value) => s"$key -> $value" }.mkString("<br>")
+
+    data.asScala
+      .map { case (key, value) => s"$key -> $value" }
+      .mkString("<br>")
+      .concat(s"<br>")
+      .concat(s"id -> $id")
   }
 }
