@@ -95,6 +95,25 @@ class InputTextComponentSpec extends WordSpec with MustMatchers {
         html >> element("input") >?> attr("required") mustBe defined
       }
 
+      "not contain error class in input given no error" in {
+        val field = InputTextField(id, name, label)
+
+        val raw  = InputTextComponent.render(field)
+        val html = browser.parseString(raw)
+
+        html >?> element("input.is-invalid") mustBe empty
+      }
+
+      "contain error class in input given one or more errors" in {
+        val error = FormFieldError(randomText(20))
+        val field = InputTextField(id, name, label, errors = Seq(error))
+
+        val raw  = InputTextComponent.render(field)
+        val html = browser.parseString(raw)
+
+        html >?> element("input.is-invalid") mustBe defined
+      }
+
       "not contain error element given no error" in {
         val field = InputTextField(id, name, label)
 

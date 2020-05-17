@@ -2,9 +2,11 @@
       action="{{target}}"
       method="post"
       novalidate>
-    <div class="row">
-        {{fields}}
-    </div>
+    {{#fields}}
+        <div class="form-row mb-3">
+            {{.}}
+        </div>
+    {{/fields}}
 
     <hr class="mb-3">
 

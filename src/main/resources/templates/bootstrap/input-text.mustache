@@ -5,7 +5,7 @@
            {{#value}}value="{{.}}"{{/value}}
            {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
            {{#required}}required{{/required}}
-           class="form-control"
+           class="form-control {{#has_error}}is-invalid{{/has_error}}"
            type="text">
 
     {{#has_single_error}}

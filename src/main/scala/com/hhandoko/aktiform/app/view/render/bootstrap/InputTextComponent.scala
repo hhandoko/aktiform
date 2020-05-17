@@ -21,6 +21,7 @@ object InputTextComponent extends InputComponent {
       value: String,
       placeholder: String
   ) {
+    val has_error: Boolean           = !errors.isEmpty
     val has_single_error: Boolean    = errors.size() == 1
     val has_multiple_errors: Boolean = errors.size() > 1
   }
@@ -29,13 +30,13 @@ object InputTextComponent extends InputComponent {
 
     def apply(domain: InputTextField): InputTextFieldModel =
       new InputTextFieldModel(
-        domain.id,
-        domain.name,
-        domain.label,
-        domain.required,
-        domain.errors.asJava,
-        domain.value.orNull,
-        domain.placeholder.orNull
+        id = domain.id,
+        name = domain.name,
+        label = domain.label,
+        required = domain.required,
+        errors = domain.errors.asJava,
+        value = domain.value.orNull,
+        placeholder = domain.placeholder.orNull
       )
   }
 }

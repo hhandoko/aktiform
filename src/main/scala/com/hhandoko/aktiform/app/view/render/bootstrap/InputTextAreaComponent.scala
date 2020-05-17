@@ -1,5 +1,6 @@
 package com.hhandoko.aktiform.app.view.render.bootstrap
 
+import java.lang.{Integer => JInt}
 import java.util.{List => JList}
 
 import com.hhandoko.aktiform.api.html.input.{FormFieldError, InputTextAreaField}
@@ -19,23 +20,28 @@ object InputTextAreaComponent extends InputComponent {
       required: Boolean,
       errors: JList[FormFieldError],
       value: String,
-      placeholder: String
+      placeholder: String,
+      rows: JInt
   ) {
+    val has_error: Boolean           = !errors.isEmpty
     val has_single_error: Boolean    = errors.size() == 1
     val has_multiple_errors: Boolean = errors.size() > 1
   }
   private[this] final object InputTextAreaFieldModel {
     import scala.jdk.CollectionConverters._
 
+    import com.hhandoko.aktiform.core.helper.JavaPrimitiveExtension.OptionIntToJavaIntegerSyntax
+
     def apply(domain: InputTextAreaField): InputTextAreaFieldModel =
       new InputTextAreaFieldModel(
-        domain.id,
-        domain.name,
-        domain.label,
-        domain.required,
-        domain.errors.asJava,
-        domain.value.orNull,
-        domain.placeholder.orNull
+        id = domain.id,
+        name = domain.name,
+        label = domain.label,
+        required = domain.required,
+        errors = domain.errors.asJava,
+        value = domain.value.orNull,
+        placeholder = domain.placeholder.orNull,
+        rows = domain.rows.orIntNull
       )
   }
 }
