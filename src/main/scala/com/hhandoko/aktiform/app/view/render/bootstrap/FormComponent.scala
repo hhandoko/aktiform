@@ -1,6 +1,6 @@
 package com.hhandoko.aktiform.app.view.render.bootstrap
 
-import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextField}
+import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.app.view.render.RenderComponent
 
 object FormComponent extends RenderComponent {
@@ -24,6 +24,7 @@ object FormComponent extends RenderComponent {
 
   private[this] def render(field: FormField): String =
     field match {
-      case t: InputTextField => InputTextComponent.render(t)
+      case t: InputTextField      => InputTextComponent.render(t)
+      case ta: InputTextAreaField => InputTextAreaComponent.render(ta)
     }
 }

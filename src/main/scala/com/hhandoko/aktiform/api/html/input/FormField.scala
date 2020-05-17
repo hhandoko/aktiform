@@ -19,3 +19,13 @@ final case class InputTextField(
     required: Boolean = false,
     errors: Seq[FormFieldError] = Seq.empty
 ) extends FormField
+
+final case class InputTextAreaField(
+    id: String,
+    name: String,
+    label: String,
+    value: Option[String] = None,
+    placeholder: Option[String] = None,
+    required: Boolean = false,
+    errors: Seq[FormFieldError] = Seq.empty
+) extends FormField
