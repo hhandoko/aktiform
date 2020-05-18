@@ -1,7 +1,5 @@
 package com.hhandoko.aktiform.app.view.render.bootstrap
 
-import scala.util.Random
-
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
@@ -10,9 +8,10 @@ import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.junit.JUnitRunner
 
 import com.hhandoko.aktiform.api.html.input.{FormFieldError, InputTextField}
+import com.hhandoko.aktiform.app.RandomFixture
 
 @RunWith(classOf[JUnitRunner])
-class InputTextComponentSpec extends WordSpec with MustMatchers {
+class InputTextComponentSpec extends WordSpec with MustMatchers with RandomFixture {
 
   val browser = new JsoupBrowser()
 
@@ -147,7 +146,4 @@ class InputTextComponentSpec extends WordSpec with MustMatchers {
       }
     }
   }
-
-  private[this] def randomText(length: Int): String =
-    Random.alphanumeric.take(length).mkString
 }
