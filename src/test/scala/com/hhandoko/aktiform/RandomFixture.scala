@@ -1,4 +1,4 @@
-package com.hhandoko.aktiform.app
+package com.hhandoko.aktiform
 
 import scala.util.Random
 

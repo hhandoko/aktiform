@@ -7,8 +7,8 @@ import org.junit.runner.RunWith
 import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.junit.JUnitRunner
 
+import com.hhandoko.aktiform.RandomFixture
 import com.hhandoko.aktiform.api.html.input.{FormFieldError, InputTextAreaField}
-import com.hhandoko.aktiform.app.RandomFixture
 
 @RunWith(classOf[JUnitRunner])
 class InputTextAreaComponentSpec extends WordSpec with MustMatchers with RandomFixture {

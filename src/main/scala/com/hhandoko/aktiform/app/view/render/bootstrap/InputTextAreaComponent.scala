@@ -30,7 +30,7 @@ object InputTextAreaComponent extends InputComponent {
   private[this] final object InputTextAreaFieldModel {
     import scala.jdk.CollectionConverters._
 
-    import com.hhandoko.aktiform.core.helper.JavaPrimitiveExtension.OptionIntToJavaIntegerSyntax
+    import com.hhandoko.aktiform.core.syntax.JavaPrimitiveExtension.OptionIntToJavaIntegerSyntax
 
     def apply(domain: InputTextAreaField): InputTextAreaFieldModel =
       new InputTextAreaFieldModel(

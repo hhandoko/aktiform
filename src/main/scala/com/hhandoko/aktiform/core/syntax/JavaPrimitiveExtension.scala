@@ -1,4 +1,4 @@
-package com.hhandoko.aktiform.core.helper
+package com.hhandoko.aktiform.core.syntax
 
 object JavaPrimitiveExtension {
 
