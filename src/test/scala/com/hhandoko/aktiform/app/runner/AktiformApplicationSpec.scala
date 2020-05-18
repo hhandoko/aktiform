@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest
 class AktiformApplicationSpec extends WordSpec with MustMatchers {
 
-  "Context must load" in {
+  "Aktiform application runner must load ApplicationContext" in {
     true mustBe true
   }
 

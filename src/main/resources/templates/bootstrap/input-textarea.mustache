@@ -1,12 +1,12 @@
 <div class="col">
     <label for="{{id}}">{{label}}</label>
-    <input id="{{id}}"
-           name="{{name}}"
-           {{#value}}value="{{.}}"{{/value}}
-           {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
-           {{#required}}required{{/required}}
-           class="form-control {{#has_error}}is-invalid{{/has_error}}"
-           type="text">
+    <textarea id="{{id}}"
+              name="{{name}}"
+              {{#value}}value="{{.}}"{{/value}}
+              {{#placeholder}}placeholder="{{.}}"{{/placeholder}}
+              {{#rows}}rows="{{.}}"{{/rows}}
+              {{#required}}required{{/required}}
+              class="form-control {{#has_error}}is-invalid{{/has_error}}"></textarea>
 
     {{#has_single_error}}
         <div class="invalid-feedback">

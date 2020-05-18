@@ -1,6 +1,8 @@
 package com.hhandoko.aktiform.app.view.render.bootstrap
 
-import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextField}
+import java.util.{List => JList}
+
+import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.app.view.render.RenderComponent
 
 object FormComponent extends RenderComponent {
@@ -12,18 +14,20 @@ object FormComponent extends RenderComponent {
 
   private[this] final case class FormModel(
       target: String,
-      fields: String
+      fields: JList[String]
   )
   private[this] final object FormModel {
+    import scala.jdk.CollectionConverters._
     def apply(form: Form): FormModel =
       FormModel(
         form.target,
-        form.fields.map(render).mkString
+        form.fields.map(render).asJava
       )
   }
 
   private[this] def render(field: FormField): String =
     field match {
-      case t: InputTextField => InputTextComponent.render(t)
+      case t: InputTextField      => InputTextComponent.render(t)
+      case ta: InputTextAreaField => InputTextAreaComponent.render(ta)
     }
 }

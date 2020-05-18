@@ -1,7 +1,5 @@
 package com.hhandoko.aktiform.app.view.render.bootstrap
 
-import scala.util.Random
-
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
@@ -9,10 +7,11 @@ import org.junit.runner.RunWith
 import org.scalatest.{MustMatchers, WordSpec}
 import org.scalatestplus.junit.JUnitRunner
 
+import com.hhandoko.aktiform.RandomFixture
 import com.hhandoko.aktiform.api.html.input.{FormFieldError, InputTextField}
 
 @RunWith(classOf[JUnitRunner])
-class InputTextComponentSpec extends WordSpec with MustMatchers {
+class InputTextComponentSpec extends WordSpec with MustMatchers with RandomFixture {
 
   val browser = new JsoupBrowser()
 
@@ -95,6 +94,25 @@ class InputTextComponentSpec extends WordSpec with MustMatchers {
         html >> element("input") >?> attr("required") mustBe defined
       }
 
+      "not contain error class in input given no error" in {
+        val field = InputTextField(id, name, label)
+
+        val raw  = InputTextComponent.render(field)
+        val html = browser.parseString(raw)
+
+        html >?> element("input.is-invalid") mustBe empty
+      }
+
+      "contain error class in input given one or more errors" in {
+        val error = FormFieldError(randomText(20))
+        val field = InputTextField(id, name, label, errors = Seq(error))
+
+        val raw  = InputTextComponent.render(field)
+        val html = browser.parseString(raw)
+
+        html >?> element("input.is-invalid") mustBe defined
+      }
+
       "not contain error element given no error" in {
         val field = InputTextField(id, name, label)
 
@@ -128,7 +146,4 @@ class InputTextComponentSpec extends WordSpec with MustMatchers {
       }
     }
   }
-
-  private[this] def randomText(length: Int): String =
-    Random.alphanumeric.take(length).mkString
 }
