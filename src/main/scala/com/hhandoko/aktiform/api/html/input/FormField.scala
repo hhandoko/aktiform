@@ -10,7 +10,18 @@ sealed trait FormField {
   def errors: Seq[FormFieldError]
 }
 
-/** See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text */
+/**
+  * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text
+  *
+  * TODO:
+  *   - list
+  *   - maxlength
+  *   - minlength
+  *   - pattern
+  *   - readonly
+  *   - size
+  *   - spellcheck
+  */
 final case class InputTextField(
     id: String,
     name: String,
@@ -21,7 +32,23 @@ final case class InputTextField(
     errors: Seq[FormFieldError] = Seq.empty
 ) extends FormField
 
-/** See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea */
+/**
+  * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
+  *
+  * Skipped:
+  *   - cols: Textarea width would be controlled by the stylesheet instead.
+  *   - form: Textarea would always be a child of `<form>` for simplicity.
+  *
+  * TODO:
+  *   - autocomplete
+  *   - autofocus
+  *   - disabled
+  *   - maxlength
+  *   - minlength
+  *   - readonly
+  *   - spellcheck
+  *   - wrap
+  */
 final case class InputTextAreaField(
     id: String,
     name: String,
