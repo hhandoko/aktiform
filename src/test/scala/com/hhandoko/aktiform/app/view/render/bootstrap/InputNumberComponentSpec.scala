@@ -66,13 +66,13 @@ class InputNumberComponentSpec extends WordSpec with MustMatchers with RandomFix
       }
 
       "contain value if provided" in {
-        val valueToTest = randomText(10)
+        val valueToTest = randomInt(10)
         val field       = InputNumberField(id, name, label, value = Some(valueToTest))
 
         val raw  = InputNumberComponent.render(field)
         val html = browser.parseString(raw)
 
-        html >> element("input") >> attr("value") mustBe valueToTest
+        html >> element("input") >> attr("value") mustBe valueToTest.toString
       }
 
       "contain placeholder if provided" in {

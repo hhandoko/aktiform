@@ -35,7 +35,7 @@ object InputNumberComponent extends InputComponent {
         label = domain.label,
         required = domain.required,
         errors = domain.errors.asJava,
-        value = domain.value.orNull,
+        value = domain.value.map(_.toString).orNull,
         placeholder = domain.placeholder.orNull
       )
   }
