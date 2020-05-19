@@ -2,7 +2,7 @@ package com.hhandoko.aktiform.app.view.render.bootstrap
 
 import java.util.{List => JList}
 
-import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputTextAreaField, InputTextField}
+import com.hhandoko.aktiform.api.html.input.{Form, FormField, InputNumberField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.app.view.render.RenderComponent
 
 object FormComponent extends RenderComponent {
@@ -25,9 +25,10 @@ object FormComponent extends RenderComponent {
       )
   }
 
-  private[this] def render(field: FormField): String =
+  private[this] def render(field: FormField[_]): String =
     field match {
       case t: InputTextField      => InputTextComponent.render(t)
       case ta: InputTextAreaField => InputTextAreaComponent.render(ta)
+      case n: InputNumberField    => InputNumberComponent.render(n)
     }
 }
