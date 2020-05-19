@@ -14,6 +14,7 @@ sealed trait FormField {
   * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text
   *
   * TODO:
+  *   - autocomplete - https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
   *   - list
   *   - maxlength
   *   - minlength
@@ -40,7 +41,7 @@ final case class InputTextField(
   *   - form: Textarea would always be a child of `<form>` for simplicity.
   *
   * TODO:
-  *   - autocomplete
+  *   - autocomplete - https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
   *   - autofocus
   *   - disabled
   *   - maxlength
@@ -58,4 +59,25 @@ final case class InputTextAreaField(
     required: Boolean = false,
     errors: Seq[FormFieldError] = Seq.empty,
     rows: Option[Int] = None
+) extends FormField
+
+/**
+  * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number
+  *
+  * TODO:
+  *   - autocomplete - https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
+  *   - list
+  *   - max
+  *   - min
+  *   - readonly
+  *   - step
+  */
+final case class InputNumberField(
+    id: String,
+    name: String,
+    label: String,
+    value: Option[String] = None,
+    placeholder: Option[String] = None,
+    required: Boolean = false,
+    errors: Seq[FormFieldError] = Seq.empty
 ) extends FormField

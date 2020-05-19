@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.{
   RestController
 }
 
-import com.hhandoko.aktiform.api.html.input.{Form, InputTextAreaField, InputTextField}
+import com.hhandoko.aktiform.api.html.input.{Form, InputNumberField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.api.html.{Page, Section}
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
@@ -33,7 +33,8 @@ final class FormController @Autowired() (
   ): String = {
     val textField     = InputTextField("name", "name", "Name")
     val textAreaField = InputTextAreaField("notes", "notes", "Notes")
-    val fields        = Seq(textField, textAreaField)
+    val numberField   = InputNumberField("age", "age", "Age")
+    val fields        = Seq(textField, textAreaField, numberField)
     val form          = Form(s"/forms/${id}", fields)
     val section       = Section(Seq(form))
     val page          = Page(Seq(section))
