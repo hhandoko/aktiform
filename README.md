@@ -7,7 +7,9 @@
 
 ## Prerequisites
 
-The only prerequisites is Graal 20.+ (JDK 11). Gradle build tool will be downloaded and setup on first run.
+The only prerequisites is a Java SDK in path. Gradle build tool will be downloaded and setup on first run.
+
+Graal 20.+ (Java SDK 11) is used for development, other Java 11 SDK may be used, but certain capabilities will be missing at runtime (e.g. polyglot scripting).
 
 ## Setup Steps
 
