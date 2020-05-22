@@ -11,8 +11,9 @@ import com.hhandoko.aktiform.app.module.PolyglotContextModule
 
 /** Main application class (Spring Application runner).
   *
-  * `EnableConfigurationProperties` and `Import` is used here to make it explicit configuration and modules that are
-  * loaded than relying on automated component scanning.
+  * `EnableConfigurationProperties` and `Import` is used here to make it
+  * explicit configuration and modules that are loaded than relying on automated
+  * component scanning.
   */
 @EnableConfigurationProperties(
   value = Array(
