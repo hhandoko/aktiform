@@ -70,6 +70,9 @@ dependencies {
     }
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation scala("com.typesafe.scala-logging:scala-logging:${scalaLoggingVersion}")
+    implementation scala("io.circe:circe-core:${circeVersion}")
+    implementation scala("io.circe:circe-generic:${circeVersion}")
+    implementation scala("io.circe:circe-parser:${circeVersion}")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation scala("net.ruippeixotog:scala-scraper:${scalaScraperVersion}")

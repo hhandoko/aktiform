@@ -2,6 +2,7 @@ package com.hhandoko.aktiform.app.controller
 
 import java.util.{Map => JMap}
 
+import io.circe.Json
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.{
   GetMapping,
@@ -50,10 +51,17 @@ final class FormController @Autowired() (
   ): String = {
     import scala.jdk.CollectionConverters._
 
+    val json = Json.fromFields {
+      data.asScala
+        .map { case (key, value) => (key, Json.fromString(value)) }
+    }
+
     data.asScala
       .map { case (key, value) => s"$key -> $value" }
       .mkString("<br>")
-      .concat(s"<br>")
+      .concat("<br>")
       .concat(s"id -> $id")
+      .concat("<br>")
+      .concat(json.spaces4SortKeys)
   }
 }
