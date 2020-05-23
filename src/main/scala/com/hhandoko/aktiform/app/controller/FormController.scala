@@ -2,7 +2,6 @@ package com.hhandoko.aktiform.app.controller
 
 import java.util.{Map => JMap}
 
-import io.circe.Json
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.{
   GetMapping,
@@ -32,13 +31,8 @@ final class FormController @Autowired() (
   def showForm(
       @PathVariable id: String
   ): String = {
-    val textField     = InputTextField("name", "name", "Name")
-    val textAreaField = InputTextAreaField("notes", "notes", "Notes")
-    val numberField   = InputNumberField("age", "age", "Age")
-    val fields        = Seq(textField, textAreaField, numberField)
-    val form          = Form(s"/forms/${id}", fields)
-    val section       = Section(Seq(form))
-    val page          = Page(Seq(section))
+    val section = Section(Seq(form(id)))
+    val page    = Page(Seq(section))
 
     renderer.render(page)
   }
@@ -51,10 +45,7 @@ final class FormController @Autowired() (
   ): String = {
     import scala.jdk.CollectionConverters._
 
-    val json = Json.fromFields {
-      data.asScala
-        .map { case (key, value) => (key, Json.fromString(value)) }
-    }
+    val filledForm = form(id).fill(data.asScala.toMap)
 
     data.asScala
       .map { case (key, value) => s"$key -> $value" }
@@ -62,6 +53,15 @@ final class FormController @Autowired() (
       .concat("<br>")
       .concat(s"id -> $id")
       .concat("<br>")
-      .concat(json.spaces4SortKeys)
+      .concat(filledForm.toJson.spaces4SortKeys)
+  }
+
+  private def form(id: String) = {
+    val textField     = InputTextField("name", "name", "Name")
+    val textAreaField = InputTextAreaField("notes", "notes", "Notes")
+    val numberField   = InputNumberField("age", "age", "Age")
+    val fields        = Seq(textField, textAreaField, numberField)
+
+    Form(s"/forms/${id}", fields)
   }
 }
