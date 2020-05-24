@@ -2,6 +2,7 @@ package com.hhandoko.aktiform.app.controller
 
 import java.util.{Map => JMap}
 
+import org.graalvm.polyglot.Context
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.{
   GetMapping,
@@ -19,6 +20,7 @@ import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
 
 @RestController
 final class FormController @Autowired() (
+    context: Context,
     resourcesConfig: ResourcesConfig
 ) {
 
@@ -46,6 +48,8 @@ final class FormController @Autowired() (
     import scala.jdk.CollectionConverters._
 
     val filledForm = form(id).fill(data.asScala.toMap)
+    val evaluator  = context.eval("js", data.getOrDefault("transform", "x => x"))
+    val result     = evaluator.execute(data.get("age").toInt).asInt()
 
     data.asScala
       .map { case (key, value) => s"$key -> $value" }
@@ -53,14 +57,17 @@ final class FormController @Autowired() (
       .concat("<br>")
       .concat(s"id -> $id")
       .concat("<br>")
+      .concat(s"result -> $result")
+      .concat("<br>")
       .concat(filledForm.toJson.spaces4SortKeys)
   }
 
   private def form(id: String) = {
-    val textField     = InputTextField("name", "name", "Name")
-    val textAreaField = InputTextAreaField("notes", "notes", "Notes")
-    val numberField   = InputNumberField("age", "age", "Age")
-    val fields        = Seq(textField, textAreaField, numberField)
+    val textField      = InputTextField("name", "name", "Name")
+    val textAreaField  = InputTextAreaField("notes", "notes", "Notes")
+    val numberField    = InputNumberField("age", "age", "Age")
+    val transformField = InputTextAreaField("transform", "transform", "Transform Data")
+    val fields         = Seq(textField, textAreaField, numberField, transformField)
 
     Form(s"/forms/${id}", fields)
   }
