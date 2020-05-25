@@ -62,7 +62,7 @@ final class FormController @Autowired() (
       .concat(filledForm.toJson.spaces4SortKeys)
   }
 
-  private def form(id: String) = {
+  private def form(id: String): Form = {
     val textField      = InputTextField("name", "name", "Name")
     val textAreaField  = InputTextAreaField("notes", "notes", "Notes")
     val numberField    = InputNumberField("age", "age", "Age")
