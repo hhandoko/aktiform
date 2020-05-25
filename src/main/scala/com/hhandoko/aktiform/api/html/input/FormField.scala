@@ -8,6 +8,8 @@ sealed trait FormField[T] {
   def placeholder: Option[String]
   def required: Boolean
   def errors: Seq[FormFieldError]
+
+  def parse(value: String): FormField[T]
 }
 
 /**
@@ -31,7 +33,11 @@ final case class InputTextField(
     placeholder: Option[String] = None,
     required: Boolean = false,
     errors: Seq[FormFieldError] = Seq.empty
-) extends FormField[String]
+) extends FormField[String] {
+  // TODO: Add parsing and validation
+  override def parse(value: String): FormField[String] =
+    this.copy(value = Option(value.trim))
+}
 
 /**
   * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
@@ -59,7 +65,11 @@ final case class InputTextAreaField(
     required: Boolean = false,
     errors: Seq[FormFieldError] = Seq.empty,
     rows: Option[Int] = None
-) extends FormField[String]
+) extends FormField[String] {
+  // TODO: Add parsing and validation
+  override def parse(value: String): FormField[String] =
+    this.copy(value = Option(value.trim))
+}
 
 /**
   * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number
@@ -80,4 +90,8 @@ final case class InputNumberField(
     placeholder: Option[String] = None,
     required: Boolean = false,
     errors: Seq[FormFieldError] = Seq.empty
-) extends FormField[Int]
+) extends FormField[Int] {
+  // TODO: Add parsing and validation
+  override def parse(value: String): FormField[Int] =
+    this.copy(value = Option(value.trim.toInt))
+}
