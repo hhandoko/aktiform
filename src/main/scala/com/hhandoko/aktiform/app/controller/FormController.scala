@@ -17,6 +17,7 @@ import com.hhandoko.aktiform.api.html.input.{Form, InputNumberField, InputTextAr
 import com.hhandoko.aktiform.api.html.{Page, Section}
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
+import com.hhandoko.aktiform.core.Capabilities
 
 @RestController
 final class FormController @Autowired() (
@@ -48,8 +49,14 @@ final class FormController @Autowired() (
     import scala.jdk.CollectionConverters._
 
     val filledForm = form(id).fill(data.asScala.toMap)
-    val evaluator  = context.eval("js", data.getOrDefault("transform", "x => x"))
-    val result     = evaluator.execute(data.get("age").toInt).asInt()
+    // TODO: Convert to alert and disable form if capability does not exist
+    val result =
+      if (Capabilities.polyglot) {
+        val evaluator = context.eval("js", data.getOrDefault("transform", "x => x"))
+        evaluator.execute(data.get("age").toInt).asInt()
+      } else {
+        data.get("age").toInt
+      }
 
     data.asScala
       .map { case (key, value) => s"$key -> $value" }

@@ -26,7 +26,14 @@ class PolyglotContextModule extends LazyLogging {
   private final val JS_LANG_ID  = "js"
 
   @Bean
-  def context: Context = Context.create(JS_LANG_ID)
+  def context: Context = {
+    // TODO: Enforce lazy-loading of polyglot context
+    if (Capabilities.polyglot) {
+      logger.debug(s"[context] Creating polyglot context")
+
+      Context.create(JS_LANG_ID)
+    } else null
+  }
 
   @PostConstruct
   def polyglotCapability(): Unit = {
