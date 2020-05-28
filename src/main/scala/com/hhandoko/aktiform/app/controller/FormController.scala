@@ -1,6 +1,7 @@
 package com.hhandoko.aktiform.app.controller
 
 import java.util.{Map => JMap}
+import scala.util.Try
 
 import io.circe.Json
 import org.graalvm.polyglot.Context
@@ -55,10 +56,15 @@ final class FormController @Autowired() (
     val printStep     = printKeys(formPayload)
     val transformStep = transform(printStep)
 
-    val steps = List(printKeys _, transform _)
-    val stepSequence = steps.foldLeft(filledForm.toJson) {
+    val stepsS = List(printKeys _, transform _)
+    val stepSequence = stepsS.foldLeft(formPayload) {
       case (acc, step) => step(acc)
     }
+
+    val stepsR = List(Try(printKeys _), Try(transform _))
+    val stepRecursive =
+      recursive(formPayload, stepsR)
+        .fold(err => Json.fromString(err), identity)
 
     data.asScala
       .map { case (key, value) => s"$key -> $value" }
@@ -72,6 +78,28 @@ final class FormController @Autowired() (
       .concat(transformStep.spaces4SortKeys)
       .concat("<h1>Combined</h1>")
       .concat(stepSequence.spaces4SortKeys)
+      .concat("<h1>Recursive</h1>")
+      .concat(stepRecursive.spaces4SortKeys)
+  }
+
+  private def recursive(acc: Json, steps: List[Try[Json => Json]]): Either[String, Json] = {
+    steps match {
+      case Nil =>
+        Right(acc)
+
+      case step :: Nil =>
+        step
+          .map(f => f(acc))
+          .toEither
+          .left
+          .map(_ => "Fail")
+
+      case step :: tail =>
+        step
+          .map(f => f(acc))
+          .toEither
+          .fold(_ => Left("Fail"), res => recursive(res, tail))
+    }
   }
 
   private def printKeys(payload: Json): Json = {
