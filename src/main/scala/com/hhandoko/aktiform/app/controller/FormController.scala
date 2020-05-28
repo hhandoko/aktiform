@@ -55,6 +55,11 @@ final class FormController @Autowired() (
     val printStep     = printKeys(formPayload)
     val transformStep = transform(printStep)
 
+    val steps = List(printKeys _, transform _)
+    val stepSequence = steps.foldLeft(filledForm.toJson) {
+      case (acc, step) => step(acc)
+    }
+
     data.asScala
       .map { case (key, value) => s"$key -> $value" }
       .mkString("<br>")
@@ -65,6 +70,8 @@ final class FormController @Autowired() (
       .concat(printStep.spaces4SortKeys)
       .concat("<h1>Transform Step</h1>")
       .concat(transformStep.spaces4SortKeys)
+      .concat("<h1>Combined</h1>")
+      .concat(stepSequence.spaces4SortKeys)
   }
 
   private def printKeys(payload: Json): Json = {
