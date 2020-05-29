@@ -63,8 +63,12 @@ final class FormController @Autowired() (
 
     val stepsRec = List(Try(printKeys _), Try(transform _))
     val stepRecursive =
-      recursive(formPayload, stepsRec, t => t.toEither.left.map(_ => "Fail"))
-        .fold(err => Json.fromString(err), identity)
+      recursive(
+        formPayload,
+        stepsRec,
+        (acc, eff) => eff.map(fun => fun(acc)),
+        eff => eff.toEither.left.map(_ => "Fail")
+      ).fold(err => Json.fromString(err), identity)
 
     data.asScala
       .map { case (key, value) => s"$key -> $value" }
@@ -85,6 +89,7 @@ final class FormController @Autowired() (
   private def recursive(
       acc: Json,
       steps: List[Try[Json => Json]],
+      map: (Json, Try[Json => Json]) => Try[Json],
       eval: Try[Json] => Either[String, Json]
   ): Either[String, Json] = {
     steps match {
@@ -92,13 +97,13 @@ final class FormController @Autowired() (
         Right(acc)
 
       case step :: Nil =>
-        eval(step.map(fun => fun(acc)))
+        eval(map(acc, step))
 
       case step :: tail =>
-        eval(step.map(fun => fun(acc)))
+        eval(map(acc, step))
           .fold(
             err => Left(err),
-            res => recursive(res, tail, eval)
+            res => recursive(res, tail, map, eval)
           )
     }
   }
