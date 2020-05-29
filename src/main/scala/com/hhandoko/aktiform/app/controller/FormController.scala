@@ -63,7 +63,7 @@ final class FormController @Autowired() (
 
     val stepsRec = List(Try(printKeys _), Try(transform _))
     val stepRecursive =
-      recursive(
+      recursive[Json, Try](
         formPayload,
         stepsRec,
         (acc, eff) => eff.map(fun => fun(acc)),
@@ -86,12 +86,12 @@ final class FormController @Autowired() (
       .concat(stepRecursive.spaces4SortKeys)
   }
 
-  private def recursive(
-      acc: Json,
-      steps: List[Try[Json => Json]],
-      map: (Json, Try[Json => Json]) => Try[Json],
-      eval: Try[Json] => Either[String, Json]
-  ): Either[String, Json] = {
+  private def recursive[A, F[_]](
+      acc: A,
+      steps: List[F[A => A]],
+      map: (A, F[A => A]) => F[A],
+      eval: F[A] => Either[String, A]
+  ): Either[String, A] = {
     steps match {
       case Nil =>
         Right(acc)
