@@ -1,6 +1,8 @@
 package com.hhandoko.aktiform.app.controller
 
 import java.util.{Map => JMap}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scala.util.Try
 
 import io.circe.Json
@@ -61,13 +63,23 @@ final class FormController @Autowired() (
       case (acc, step) => step(acc)
     }
 
-    val stepsRec = List(Try(printKeys _), Try(transform _))
-    val stepRecursive =
+    val stepsTryRec = List(Try(printKeys _), Try(transform _))
+    val stepTryRecursive =
       recursive[Json, Try](
         formPayload,
-        stepsRec,
+        stepsTryRec,
         (acc, eff) => eff.map(fun => fun(acc)),
         eff => eff.toEither.left.map(_ => "Fail")
+      ).fold(err => Json.fromString(err), identity)
+
+    import scala.concurrent.ExecutionContext.Implicits.global
+    val stepsFutRec = List(Future(printKeys _), Future(transform _))
+    val stepFutRecursive =
+      recursive[Json, Future](
+        formPayload,
+        stepsFutRec,
+        (acc, eff) => eff.map(fun => fun(acc)),
+        eff => Await.result(eff.map(res => Right(res)).recover { case _ => Left("Fail") }, 30.seconds)
       ).fold(err => Json.fromString(err), identity)
 
     data.asScala
@@ -83,7 +95,9 @@ final class FormController @Autowired() (
       .concat("<h1>Combined</h1>")
       .concat(stepSequence.spaces4SortKeys)
       .concat("<h1>Recursive (Try)</h1>")
-      .concat(stepRecursive.spaces4SortKeys)
+      .concat(stepTryRecursive.spaces4SortKeys)
+      .concat("<h1>Recursive (Future)</h1>")
+      .concat(stepFutRecursive.spaces4SortKeys)
   }
 
   private def recursive[A, F[_]](
