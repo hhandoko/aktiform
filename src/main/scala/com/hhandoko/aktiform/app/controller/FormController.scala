@@ -5,17 +5,11 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scala.util.Try
 
+import cats.effect.IO
 import io.circe.Json
 import org.graalvm.polyglot.Context
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.{
-  GetMapping,
-  PathVariable,
-  PostMapping,
-  RequestParam,
-  ResponseBody,
-  RestController
-}
+import org.springframework.web.bind.annotation.{GetMapping, PathVariable, PostMapping, RequestParam, ResponseBody, RestController}
 
 import com.hhandoko.aktiform.api.html.input.{Form, InputNumberField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.api.html.{Page, Section}
@@ -83,6 +77,15 @@ final class FormController @Autowired() (
         eff => Await.result(eff.map(res => Right(res)).recover { case _ => Left("Fail") }, 30.seconds)
       ).fold(err => Json.fromString(err), identity)
 
+    val stepsIORec = List(IO(PrintStep.run _), IO(TransformStep.run _))
+    val stepIORecursive =
+      recursive[Json, IO](
+        formPayload,
+        stepsIORec,
+        (acc, eff) => eff.map(fun => fun(acc)),
+        eff => eff.attempt.unsafeRunSync().left.map(_ => "Fail")
+      ).fold(err => Json.fromString(err), identity)
+
     data.asScala
       .map { case (key, value) => s"$key -> $value" }
       .mkString("<br>")
@@ -99,6 +102,8 @@ final class FormController @Autowired() (
       .concat(stepTryRecursive.spaces4SortKeys)
       .concat("<h1>Recursive (Future)</h1>")
       .concat(stepFutRecursive.spaces4SortKeys)
+      .concat("<h1>Recursive (IO)</h1>")
+      .concat(stepIORecursive.spaces4SortKeys)
   }
 
   private def recursive[A, F[_]](
