@@ -1,0 +1,4 @@
+# Linguist override settings for GitHub
+# See: https://github.com/github/linguist#overrides
+# ~~~~~~
+- src/main/resources/static/
