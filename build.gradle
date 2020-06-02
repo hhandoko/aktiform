@@ -73,6 +73,7 @@ dependencies {
     implementation scala("io.circe:circe-core:${circeVersion}")
     implementation scala("io.circe:circe-generic:${circeVersion}")
     implementation scala("io.circe:circe-parser:${circeVersion}")
+    implementation scala("org.typelevel:cats-effect:${catsEffectVersion}")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation scala("net.ruippeixotog:scala-scraper:${scalaScraperVersion}")
