@@ -1,38 +1,31 @@
 package com.hhandoko.aktiform.core.runtime
 
+import scala.annotation.tailrec
+
 import cats.effect.IO
 import io.circe.Json
 
+import com.hhandoko.aktiform.api.task.Step
+
 object Evaluator {
 
-  def run(steps: List[IO[Json => Json]])(input: Json): Either[String, Json] = {
-    recursive[Json, IO](
-      input,
-      steps,
-      (acc, eff) => eff.map(fun => fun(acc)),
-      eff => eff.attempt.unsafeRunSync().left.map(_ => "Fail")
-    )
-  }
+  def run(steps: List[IO[Step]])(input: Json): Either[String, Json] =
+    eval(IO(input), steps).attempt
+      .unsafeRunSync()
+      .left
+      .map(err => err.getMessage)
 
-  private def recursive[A, F[_]](
-      acc: A,
-      steps: List[F[A => A]],
-      map: (A, F[A => A]) => F[A],
-      eval: F[A] => Either[String, A]
-  ): Either[String, A] = {
+  @tailrec
+  private[this] def eval(acc: IO[Json], steps: List[IO[Step]]): IO[Json] =
     steps match {
-      case Nil =>
-        Right(acc)
-
-      case step :: Nil =>
-        eval(map(acc, step))
-
-      case step :: tail =>
-        eval(map(acc, step))
-          .fold(
-            err => Left(err),
-            res => recursive(res, tail, map, eval)
-          )
+      case Nil          => acc
+      case step :: Nil  => runNext(acc, step)
+      case step :: tail => eval(runNext(acc, step), tail)
     }
-  }
+
+  private[this] def runNext(acc: IO[Json], step: IO[Step]): IO[Json] =
+    for {
+      a <- acc
+      s <- step
+    } yield s.run(a)
 }

@@ -55,7 +55,7 @@ final class FormController @Autowired() (
     val filledForm  = form(id).fill(data.asScala.toMap)
     val formPayload = filledForm.toJson
 
-    val stepsIORec    = List(IO(PrintStep.run _), IO(TransformStep.run _))
+    val stepsIORec    = List(IO(PrintStep), IO(TransformStep))
     val stepsIOEval   = Evaluator.run(stepsIORec) _
     val stepsIOResult = stepsIOEval(formPayload).fold(Json.fromString, identity)
 
