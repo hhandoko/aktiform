@@ -4,7 +4,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: oracle/graalvm-ce:20.0.0-java11
+      - image: oracle/graalvm-ce:20.1.0-java11
 
     environment:
       # Max heap and terminal mode as per CircleCI's defaults
