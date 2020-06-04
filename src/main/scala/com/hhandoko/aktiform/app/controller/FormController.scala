@@ -3,6 +3,7 @@ package com.hhandoko.aktiform.app.controller
 import java.util.{Map => JMap}
 
 import cats.effect.IO
+import com.typesafe.scalalogging.LazyLogging
 import io.circe.Json
 import org.graalvm.polyglot.Context
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.{
 
 import com.hhandoko.aktiform.api.html.input.{Form, InputNumberField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.api.html.{Page, Section}
-import com.hhandoko.aktiform.api.task.Step
+import com.hhandoko.aktiform.api.task.{IOStep, Step}
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
 import com.hhandoko.aktiform.core.Capabilities
@@ -27,7 +28,7 @@ import com.hhandoko.aktiform.core.runtime.Evaluator
 final class FormController @Autowired() (
     context: Context,
     resourcesConfig: ResourcesConfig
-) {
+) extends LazyLogging {
 
   private final val renderer = new HtmlBootstrapRender(
     resourcesConfig.bootstrap
@@ -71,13 +72,23 @@ final class FormController @Autowired() (
 
   object PrintStep extends Step {
     override def run(payload: Json): Json = {
-      payload.hcursor.downField("data").keys.foreach(println)
+      logger.info(s"[PrintStep#run] Print payload")
+
+      payload.hcursor
+        .downField("data")
+        .keys
+        .foreach { k =>
+          logger.debug(s"[PrintStep#run] Keys: ${k.mkString(", ")}")
+        }
+
       payload
     }
   }
 
-  object TransformStep extends Step {
+  object TransformStep extends IOStep {
     override def run(payload: Json): Json = {
+      logger.info(s"[TransformStep#run] Transform payload")
+
       // TODO: Convert to alert and disable form if capability does not exist
       if (Capabilities.polyglot) {
         val transformer = payload.hcursor.downField("data").get[String]("transform").getOrElse("x => x")
