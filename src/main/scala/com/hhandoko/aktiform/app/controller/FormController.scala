@@ -2,7 +2,6 @@ package com.hhandoko.aktiform.app.controller
 
 import java.util.{Map => JMap}
 
-import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
 import io.circe.Json
 import org.graalvm.polyglot.Context
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.{
 
 import com.hhandoko.aktiform.api.html.input.{Form, InputNumberField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.api.html.{Page, Section}
-import com.hhandoko.aktiform.api.task.{IOStep, Step}
+import com.hhandoko.aktiform.api.task.IOStep
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
 import com.hhandoko.aktiform.core.Capabilities
@@ -56,7 +55,7 @@ final class FormController @Autowired() (
     val filledForm  = form(id).fill(data.asScala.toMap)
     val formPayload = filledForm.toJson
 
-    val stepsIORec    = List(IO(PrintStep), IO(TransformStep))
+    val stepsIORec    = List(PrintStep, TransformStep, AlertStep)
     val stepsIOEval   = Evaluator.run(stepsIORec) _
     val stepsIOResult = stepsIOEval(formPayload).fold(Json.fromString, identity)
 
@@ -70,7 +69,15 @@ final class FormController @Autowired() (
       .concat(stepsIOResult.spaces4SortKeys)
   }
 
-  object PrintStep extends Step {
+  object AlertStep extends IOStep {
+    override def run(payload: Json): Json = {
+      logger.info(s"[AlertStep#run] Alert")
+
+      payload
+    }
+  }
+
+  object PrintStep extends IOStep {
     override def run(payload: Json): Json = {
       logger.info(s"[PrintStep#run] Print payload")
 

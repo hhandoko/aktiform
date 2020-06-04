@@ -1,31 +1,50 @@
 package com.hhandoko.aktiform.core.runtime
 
 import scala.annotation.tailrec
+import scala.concurrent.ExecutionContext
 
-import cats.effect.IO
+import cats.effect.{ContextShift, IO}
+import com.typesafe.scalalogging.LazyLogging
 import io.circe.Json
 
-import com.hhandoko.aktiform.api.task.Step
+import com.hhandoko.aktiform.api.task.{IOStep, Step}
 
-object Evaluator {
+object Evaluator extends LazyLogging {
 
-  def run(steps: List[IO[Step]])(input: Json): Either[String, Json] =
-    eval(IO(input), steps).attempt
+  implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
+
+  def run(steps: List[Step])(input: Json): Either[String, Json] =
+    eval(IO.pure(input), steps).attempt
       .unsafeRunSync()
       .left
       .map(err => err.getMessage)
 
   @tailrec
-  private[this] def eval(acc: IO[Json], steps: List[IO[Step]]): IO[Json] =
+  private[this] def eval(acc: IO[Json], steps: List[Step]): IO[Json] =
     steps match {
-      case Nil          => acc
-      case step :: Nil  => runNext(acc, step)
-      case step :: tail => eval(runNext(acc, step), tail)
+      case Nil =>
+        acc
+
+      case step :: Nil =>
+        runNext(acc, step)
+
+      case step :: tail =>
+        eval(runNext(acc, step), tail)
     }
 
-  private[this] def runNext(acc: IO[Json], step: IO[Step]): IO[Json] =
-    for {
-      a <- acc
-      s <- step
-    } yield s.run(a)
+  private[this] def runNext(acc: IO[Json], step: Step): IO[Json] = {
+    step match {
+      case step: IOStep =>
+        for {
+          a <- acc
+          r <- IO(logger.debug("[runNext] Shift -> Run")) *> cs.shift *> IO(step.run(a))
+        } yield r
+
+      case step =>
+        for {
+          a <- acc
+          r <- IO(logger.debug("[runNext] Run")) *> IO(step.run(a))
+        } yield r
+    }
+  }
 }

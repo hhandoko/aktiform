@@ -5,3 +5,5 @@ import io.circe.Json
 trait Step {
   def run(payload: Json): Json
 }
+
+trait IOStep extends Step
