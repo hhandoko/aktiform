@@ -1,5 +1,6 @@
 package com.hhandoko.aktiform.core.concurrent
 
+import java.util.concurrent.Executors
 import scala.concurrent.ExecutionContext
 
 /** Convenience class to wrap given `ExecutionContext` with MDC-propagation
@@ -20,15 +21,20 @@ class MDCPropagatingExecutionContext(wrapped: ExecutionContext)
 
 object MDCPropagatingExecutionContext {
 
+  private final val EVALUATOR_EC =
+    MDCPropagatingExecutionContext {
+      ExecutionContext.fromExecutor {
+        Executors.newWorkStealingPool()
+      }
+    }
+
   def apply(wrapped: ExecutionContext): MDCPropagatingExecutionContext =
     new MDCPropagatingExecutionContext(wrapped)
 
-  def global: MDCPropagatingExecutionContext =
-    MDCPropagatingExecutionContext(ExecutionContext.global)
+  val global: MDCPropagatingExecutionContext = EVALUATOR_EC
 
   object Implicits {
     // Convenience wrapper around the Scala global ExecutionContext
-    implicit lazy val global: MDCPropagatingExecutionContext =
-      MDCPropagatingExecutionContext(ExecutionContext.global)
+    implicit lazy val global: MDCPropagatingExecutionContext = EVALUATOR_EC
   }
 }
