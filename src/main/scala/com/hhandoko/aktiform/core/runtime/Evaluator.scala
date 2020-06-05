@@ -1,17 +1,17 @@
 package com.hhandoko.aktiform.core.runtime
 
 import scala.annotation.tailrec
-import scala.concurrent.ExecutionContext
 
 import cats.effect.{ContextShift, IO}
 import com.typesafe.scalalogging.LazyLogging
 import io.circe.Json
 
 import com.hhandoko.aktiform.api.task.{IOStep, Step}
+import com.hhandoko.aktiform.core.concurrent.MDCPropagatingExecutionContext
 
 object Evaluator extends LazyLogging {
 
-  implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
+  implicit val cs: ContextShift[IO] = IO.contextShift(MDCPropagatingExecutionContext.global)
 
   def run(steps: List[Step])(input: Json): Either[String, Json] =
     eval(IO.pure(input), steps).attempt
