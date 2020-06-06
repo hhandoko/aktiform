@@ -1,7 +1,6 @@
 package com.hhandoko.aktiform.app.module
 
 import javax.annotation.PostConstruct
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 import com.typesafe.scalalogging.LazyLogging
@@ -9,6 +8,7 @@ import org.graalvm.polyglot.Context
 import org.springframework.context.annotation.{Bean, Configuration}
 
 import com.hhandoko.aktiform.core.Capabilities
+import com.hhandoko.aktiform.core.concurrent.MDCPropagatingExecutionContext
 
 /** GraalVM polyglot feature context module loader.
   *
@@ -58,16 +58,17 @@ class PolyglotContextModule extends LazyLogging {
     * This method is fire-and-forget, and will be run on a separate thread as
     * not to block application startup.
     */
-  private[this] def warmUp: Future[Unit] = Future {
-    logger.debug(s"[warmUp] Warming up GraalVM polyglot context")
+  private[this] def warmUp: Future[Unit] =
+    Future {
+      logger.debug(s"[warmUp] Warming up GraalVM polyglot context")
 
-    val exec = context.eval(JS_LANG_ID, "x => x * x")
-    (1 to 100).foreach { i =>
-      exec.executeVoid(i)
-    }
+      val exec = context.eval(JS_LANG_ID, "x => x * x")
+      (1 to 100).foreach { i =>
+        exec.executeVoid(i)
+      }
 
-    logger.debug(s"[warmUp] GraalVM polyglot context warmed up")
-  }
+      logger.debug(s"[warmUp] GraalVM polyglot context warmed up")
+    }(MDCPropagatingExecutionContext.global)
 
   /** Naive check whether the underlying Java runtime is GraalVM.
     *
