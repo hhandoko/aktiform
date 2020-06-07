@@ -15,17 +15,18 @@ import org.springframework.web.bind.annotation.{
   RestController
 }
 
-import com.hhandoko.aktiform.api.html.input.{Form, InputNumberField, InputTextAreaField, InputTextField}
 import com.hhandoko.aktiform.api.html.{Page, Section}
 import com.hhandoko.aktiform.api.task.IOStep
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.view.render.HtmlBootstrapRender
 import com.hhandoko.aktiform.core.Capabilities
+import com.hhandoko.aktiform.core.repository.FormRepository
 import com.hhandoko.aktiform.core.runtime.Evaluator
 
 @RestController
 final class FormController @Autowired() (
     context: Context,
+    formRepo: FormRepository,
     resourcesConfig: ResourcesConfig
 ) extends LazyLogging {
 
@@ -38,7 +39,7 @@ final class FormController @Autowired() (
   def showForm(
       @PathVariable id: String
   ): String = {
-    val section = Section(Seq(form(id)))
+    val section = Section(Seq(formRepo.getForm(id)))
     val page    = Page(Seq(section))
 
     renderer.render(page)
@@ -52,7 +53,7 @@ final class FormController @Autowired() (
   ): String = {
     import scala.jdk.CollectionConverters._
 
-    val filledForm  = form(id).fill(data.asScala.toMap)
+    val filledForm  = formRepo.getForm(id).fill(data.asScala.toMap)
     val formPayload = filledForm.toJson
 
     val stepsIORec    = List(PrintStep, TransformStep, AlertStep)
@@ -113,15 +114,5 @@ final class FormController @Autowired() (
         payload
       }
     }
-  }
-
-  private def form(id: String): Form = {
-    val textField      = InputTextField("name", "name", "Name")
-    val textAreaField  = InputTextAreaField("notes", "notes", "Notes")
-    val numberField    = InputNumberField("age", "age", "Age")
-    val transformField = InputTextAreaField("transform", "transform", "Transform Data")
-    val fields         = Seq(textField, textAreaField, numberField, transformField)
-
-    Form(s"/forms/${id}", fields)
   }
 }
