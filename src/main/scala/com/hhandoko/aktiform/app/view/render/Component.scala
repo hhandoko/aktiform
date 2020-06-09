@@ -1,10 +1,9 @@
 package com.hhandoko.aktiform.app.view.render
 
 import scala.io.Source
+import scala.util.Using
 
 import com.samskivert.mustache.{Mustache, Template}
-
-import com.hhandoko.aktiform.core.helper.AutoCloseableResource.using
 
 /** Basic (abstract) trait to define renderable component.
   *
@@ -30,7 +29,7 @@ sealed trait Component {
   def templatePath: String
 
   protected lazy val templateSource: String =
-    using(Source.fromResource(templatePath))(_.mkString)
+    Using.resource(Source.fromResource(templatePath))(_.mkString)
 
   protected lazy val template: Template =
     Mustache
