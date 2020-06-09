@@ -2,6 +2,7 @@ package com.hhandoko.aktiform.app.view.render
 
 import java.util.{Collections, HashMap => JHashMap}
 import scala.io.Source
+import scala.util.Using
 
 import com.samskivert.mustache.Mustache
 import com.samskivert.mustache.Mustache.TemplateLoader
@@ -9,7 +10,6 @@ import com.typesafe.scalalogging.LazyLogging
 
 import com.hhandoko.aktiform.api.html.{Element, Page}
 import com.hhandoko.aktiform.app.config.resource.ResourceVariant
-import com.hhandoko.aktiform.core.helper.AutoCloseableResource.using
 
 /** Page renderer using dynamic master template.
   *
@@ -37,7 +37,7 @@ final class DynamicPageRender(
     val loader: TemplateLoader = (name: String) => {
       Source.fromResource(section(name)).reader()
     }
-    val raw = using(Source.fromResource(master))(_.mkString)
+    val raw = Using.resource(Source.fromResource(master))(_.mkString)
     val context =
       new JHashMap[String, AnyRef] {
         this.put("meta", Collections.EMPTY_MAP)
