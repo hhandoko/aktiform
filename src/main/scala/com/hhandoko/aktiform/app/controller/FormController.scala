@@ -1,7 +1,9 @@
 package com.hhandoko.aktiform.app.controller
 
+import java.util.concurrent.Callable
 import java.util.{Map => JMap}
 
+import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
 import io.circe.Json
 import org.graalvm.polyglot.Context
@@ -38,11 +40,13 @@ final class FormController @Autowired() (
   @ResponseBody
   def showForm(
       @PathVariable id: String
-  ): String = {
+  ): Callable[String] = Action.async {
     val section = Section(Seq(formRepo.getForm(id)))
     val page    = Page(Seq(section))
 
-    renderer.render(page)
+    val response = renderer.render(page)
+
+    IO(response)
   }
 
   @PostMapping(value = Array("/forms/{id}"))
@@ -50,7 +54,7 @@ final class FormController @Autowired() (
   def processForm(
       @PathVariable id: String,
       @RequestParam data: JMap[String, String]
-  ): String = {
+  ): Callable[String] = Action.async {
     import scala.jdk.CollectionConverters._
 
     val filledForm  = formRepo.getForm(id).fill(data.asScala.toMap)
@@ -60,14 +64,17 @@ final class FormController @Autowired() (
     val stepsIOEval   = Evaluator.run(stepsIORec) _
     val stepsIOResult = stepsIOEval(formPayload).fold(Json.fromString, identity)
 
-    data.asScala
-      .map { case (key, value) => s"$key -> $value" }
-      .mkString("<br>")
-      .prependedAll("<h1>Form Data</h1>")
-      .prependedAll(s"id -> $id")
-      .prependedAll("<h1>Request</h1>")
-      .concat("<h1>Recursive (IO)</h1>")
-      .concat(stepsIOResult.spaces4SortKeys)
+    val response =
+      data.asScala
+        .map { case (key, value) => s"$key -> $value" }
+        .mkString("<br>")
+        .prependedAll("<h1>Form Data</h1>")
+        .prependedAll(s"id -> $id")
+        .prependedAll("<h1>Request</h1>")
+        .concat("<h1>Recursive (IO)</h1>")
+        .concat(stepsIOResult.spaces4SortKeys)
+
+    IO(response)
   }
 
   object AlertStep extends IOStep {
