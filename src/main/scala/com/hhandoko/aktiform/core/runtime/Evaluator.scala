@@ -13,26 +13,28 @@ object Evaluator extends LazyLogging {
 
   implicit val cs: ContextShift[IO] = IO.contextShift(MDCPropagatingExecutionContext.global)
 
-  def run(steps: List[Step])(input: Json): Either[String, Json] =
+  def run(steps: List[Step[_]])(input: Json): Either[String, Json] =
     eval(IO.pure(input), steps).attempt
       .unsafeRunSync()
       .left
       .map(err => err.getMessage)
 
   @tailrec
-  private[this] def eval(acc: IO[Json], steps: List[Step]): IO[Json] =
+  private[this] def eval(acc: IO[Json], steps: List[Step[_]]): IO[Json] =
     steps match {
       case Nil =>
         acc
 
       case step :: Nil =>
+        logger.debug(s"[eval] Final: ${step.runtimeClassOf.getCanonicalName}")
         runNext(acc, step)
 
       case step :: tail =>
+        logger.debug(s"[eval] Step: ${step.runtimeClassOf.getCanonicalName}")
         eval(runNext(acc, step), tail)
     }
 
-  private[this] def runNext(acc: IO[Json], step: Step): IO[Json] = {
+  private[this] def runNext(acc: IO[Json], step: Step[_]): IO[Json] = {
     step match {
       case step: IOStep =>
         for {
