@@ -40,13 +40,21 @@ object Evaluator extends LazyLogging {
         for {
           a <- acc
           r <- IO(logger.debug("[runNext] Shift -> Run")) *> cs.shift *> IO(step.run(a))
-        } yield r
+        } yield {
+          logger.debug(s"[runNext] IO - ${a.getClass} vs ${step.runtimeClassOf}")
+          logger.debug(s"[runNext] IO - Same? ${"Hello".getClass.isAssignableFrom(step.runtimeClassOf)}")
+          r
+        }
 
       case step =>
         for {
           a <- acc
           r <- IO(logger.debug("[runNext] Run")) *> IO(step.run(a))
-        } yield r
+        } yield {
+          logger.debug(s"[runNext] Standard - ${a.getClass} vs ${step.runtimeClassOf}")
+          logger.debug(s"[runNext] Standard - Same? ${"Hello".getClass.isAssignableFrom(step.runtimeClassOf)}")
+          r
+        }
     }
   }
 }
