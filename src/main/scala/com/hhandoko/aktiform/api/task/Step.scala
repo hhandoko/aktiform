@@ -4,9 +4,14 @@ import scala.reflect.ClassTag
 
 import io.circe.Json
 
-abstract class Step[A](implicit a: ClassTag[A]) {
+abstract class Step[A, B](implicit a: ClassTag[A]) {
   val runtimeClassOf = a.runtimeClass
-  def run(payload: Json): Json
+
+  def decode(in: A): Json
+  def encode(in: Json): B
+
+  def map(payload: Json): Json
+  def run(payload: A): B
 }
 
-trait IOStep extends Step[String]
+trait IOStep[A, B] extends Step[A, B]
