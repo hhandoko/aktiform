@@ -77,16 +77,27 @@ final class FormController @Autowired() (
     IO(response)
   }
 
-  object AlertStep extends IOStep {
-    override def run(payload: Json): Json = {
+  object AlertStep extends IOStep[Json, Json] {
+
+    override def decode(in: Json): Json = in
+    override def encode(in: Json): Json = in
+
+    override def map(payload: Json): Json = {
       logger.info(s"[AlertStep#run] Alert")
 
       payload
     }
+
+    override def run(payload: Json): Json =
+      map(payload)
   }
 
-  object PrintStep extends IOStep {
-    override def run(payload: Json): Json = {
+  object PrintStep extends IOStep[Json, Json] {
+
+    override def decode(in: Json): Json = in
+    override def encode(in: Json): Json = in
+
+    override def map(payload: Json): Json = {
       logger.info(s"[PrintStep#run] Print payload")
 
       payload.hcursor
@@ -98,10 +109,17 @@ final class FormController @Autowired() (
 
       payload
     }
+
+    override def run(payload: Json): Json =
+      map(payload)
   }
 
-  object TransformStep extends IOStep {
-    override def run(payload: Json): Json = {
+  object TransformStep extends IOStep[Json, Json] {
+
+    override def decode(in: Json): Json = in
+    override def encode(in: Json): Json = in
+
+    override def map(payload: Json): Json = {
       logger.info(s"[TransformStep#run] Transform payload")
 
       // TODO: Convert to alert and disable form if capability does not exist
@@ -121,5 +139,8 @@ final class FormController @Autowired() (
         payload
       }
     }
+
+    override def run(payload: Json): Json =
+      map(payload)
   }
 }
