@@ -4,8 +4,9 @@ import scala.reflect.ClassTag
 
 import io.circe.Json
 
-abstract class Step[A, B](implicit a: ClassTag[A]) {
-  val runtimeClassOf = a.runtimeClass
+abstract class Step[A, B](implicit a: ClassTag[A], b: ClassTag[B]) {
+  val inRuntimeClassOf  = a.runtimeClass
+  val outRuntimeClassOf = b.runtimeClass
 
   def decode(in: A): Json
   def encode(in: Json): B
