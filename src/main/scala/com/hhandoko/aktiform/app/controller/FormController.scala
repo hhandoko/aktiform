@@ -28,6 +28,7 @@ import com.hhandoko.aktiform.core.runtime.Evaluator
 @RestController
 final class FormController @Autowired() (
     context: Context,
+    evaluator: Evaluator,
     formRepo: FormRepository,
     resourcesConfig: ResourcesConfig
 ) extends LazyLogging {
@@ -61,7 +62,7 @@ final class FormController @Autowired() (
     val formPayload = filledForm.toJson
 
     val stepsIORec    = List(PrintStep, TransformStep, AlertStep)
-    val stepsIOEval   = Evaluator.run(stepsIORec) _
+    val stepsIOEval   = evaluator.run(stepsIORec) _
     val stepsIOResult = stepsIOEval(formPayload).fold(Json.fromString, identity)
 
     val response =

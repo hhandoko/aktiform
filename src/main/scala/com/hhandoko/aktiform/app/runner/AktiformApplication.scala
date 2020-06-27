@@ -7,7 +7,12 @@ import org.springframework.context.annotation.Import
 
 import com.hhandoko.aktiform.app.config.ResourcesConfig
 import com.hhandoko.aktiform.app.controller.{FormController, HelloWorldController, HomeController}
-import com.hhandoko.aktiform.app.module.{PolyglotContextModule, StandaloneProviderModule}
+import com.hhandoko.aktiform.app.module.{
+  EvaluatorModule,
+  ExecutionContextModule,
+  PolyglotContextModule,
+  StandaloneProviderModule
+}
 
 /** Main application class (Spring Application runner).
   *
@@ -23,6 +28,8 @@ import com.hhandoko.aktiform.app.module.{PolyglotContextModule, StandaloneProvid
 @Import(
   value = Array(
     // Modules
+    classOf[EvaluatorModule],
+    classOf[ExecutionContextModule],
     classOf[PolyglotContextModule],
     classOf[StandaloneProviderModule],
     // Controllers
