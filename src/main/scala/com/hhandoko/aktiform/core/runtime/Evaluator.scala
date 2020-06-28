@@ -14,6 +14,13 @@ sealed trait Evaluator {
   def run(steps: List[Step[_, _]])(input: Json): Either[String, Json]
 }
 
+/** IO-based evaluator.
+  *
+  * Suspends all expression in steps in cats-effect IO to evaluate once
+  * expression chain is built.
+  *
+  * @param executionContext Underlying Execution Context to use.
+  */
 class IOEvaluator @Autowired() (
     executionContext: ExecutionContext
 ) extends Evaluator
