@@ -1,14 +1,14 @@
 package com.hhandoko.aktiform.app.module
 
 import javax.annotation.PostConstruct
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 import com.typesafe.scalalogging.LazyLogging
 import org.graalvm.polyglot.Context
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.{Bean, Configuration}
 
 import com.hhandoko.aktiform.core.Capabilities
-import com.hhandoko.aktiform.core.concurrent.MDCPropagatingExecutionContext
 
 /** GraalVM polyglot feature context module loader.
   *
@@ -19,7 +19,9 @@ import com.hhandoko.aktiform.core.concurrent.MDCPropagatingExecutionContext
   * TODO: To be refactored to lazy loading, once flow building blocks is ready
   */
 @Configuration
-class PolyglotContextModule extends LazyLogging {
+class PolyglotContextModule @Autowired() (
+    executionContext: ExecutionContext
+) extends LazyLogging {
 
   private final val VERSION_KEY = "java.vendor.version"
   private final val GRAAL_VM_ID = "graalvm"
@@ -68,7 +70,7 @@ class PolyglotContextModule extends LazyLogging {
       }
 
       logger.debug(s"[warmUp] GraalVM polyglot context warmed up")
-    }(MDCPropagatingExecutionContext.global)
+    }(executionContext)
 
   /** Naive check whether the underlying Java runtime is GraalVM.
     *

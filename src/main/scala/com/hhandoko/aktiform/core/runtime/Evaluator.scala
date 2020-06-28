@@ -1,17 +1,32 @@
 package com.hhandoko.aktiform.core.runtime
 
 import scala.annotation.tailrec
+import scala.concurrent.ExecutionContext
 
 import cats.effect.{ContextShift, IO}
 import com.typesafe.scalalogging.LazyLogging
 import io.circe.Json
+import org.springframework.beans.factory.annotation.Autowired
 
 import com.hhandoko.aktiform.api.task.{IOStep, Step}
-import com.hhandoko.aktiform.core.concurrent.MDCPropagatingExecutionContext
 
-object Evaluator extends LazyLogging {
+sealed trait Evaluator {
+  def run(steps: List[Step[_, _]])(input: Json): Either[String, Json]
+}
 
-  implicit val cs: ContextShift[IO] = IO.contextShift(MDCPropagatingExecutionContext.global)
+/** IO-based evaluator.
+  *
+  * Suspends all expression in steps in cats-effect IO to evaluate once
+  * expression chain is built.
+  *
+  * @param executionContext Underlying Execution Context to use.
+  */
+class IOEvaluator @Autowired() (
+    executionContext: ExecutionContext
+) extends Evaluator
+    with LazyLogging {
+
+  implicit val cs: ContextShift[IO] = IO.contextShift(executionContext)
 
   def run(steps: List[Step[_, _]])(input: Json): Either[String, Json] =
     eval(IO.pure(input), steps).attempt

@@ -1,17 +1,17 @@
-package com.hhandoko.aktiform.core.concurrent
+package com.hhandoko.aktiform.core.runtime
 
 import java.util.{Map => JMap}
 import scala.concurrent.ExecutionContext
 
 import org.slf4j.MDC
 
-/** Scala's `ExecutionContext`` helper trait, to ensure Slf4j's Mapped Diagnostic
+/** Scala's `ExecutionContext` helper trait, to ensure Slf4j's Mapped Diagnostic
   * Context (MDC) values are propagated to the execution site, retaining
   * `ThreadLocal`-like MDC logging behaviour for async operations.
   *
   * MDC does not work well in async context. MDC will output blank values as
-  * Scala's `ExecutionContext`` will execute on a shared pool of worker threads,
-  * s opposed to MDC defaults which bound their values to each thread
+  * Scala's `ExecutionContext` will execute on a shared pool of worker threads,
+  * as opposed to MDC defaults which bound their values to each thread
   * (`ThreadLocal`).
   *
   * Refer to: https://medium.com/hootsuite-engineering/logging-contextual-info-in-an-asynchronous-scala-application-8ea33bfec9b3
